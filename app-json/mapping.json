@@ -1,0 +1,10 @@
+{
+    "id": "mapping-docker-mesos",
+    "cpus": 0.5,
+    "mem": 128,
+    "cmd": "sudo /autoscaling/mapping/mapping_docker_mesos.py",
+    "instances": 3,
+    "constraints": [
+        ["hostname", "UNIQUE"]
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "id": "influxdb-db",
+    "cpus": 0.5,
+    "mem": 128,
+    "instances": 1,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "tutum/influxdb:0.8.8",
+            "network": "BRIDGE",
+            "portMappings": [{
+                "containerPort": 8083,
+                "hostPort": 31100,
+                "protocol": "tcp"
+            },
+            {
+                "containerPort": 8086,
+                "hostPort": 31101,
+                "protocol": "tcp"
+            }]
+        }
+    },
+    "env": {
+        "PRE_CREATE_DB": "cadvisor"
+    },
+    "constraints": [
+        ["hostname", "CLUSTER", "10.10.10.51"],
+        ["hostname", "UNIQUE"]
+    ]
+}
