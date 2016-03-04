@@ -1,0 +1,11 @@
+{
+    "id": "marathon-lb",
+    "cpus": 0.5,
+    "mem": 128,
+    "cmd": "sudo /autoscaling/marathon-lb/marathon_lb.py --marathon http://10.10.10.51:8080 --haproxy-config /etc/haproxy/haproxy.cfg --group external --sse",
+    "instances": 1,
+    "constraints": [
+        ["hostname", "CLUSTER", "10.10.10.51"],
+        ["hostname", "UNIQUE"]
+    ]
+}
