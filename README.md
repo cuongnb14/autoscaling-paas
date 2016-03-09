@@ -1,7 +1,7 @@
 # autoscaling-paas
 autoscaling on mesos 
 
-1. Install infrastructure
+##1. Install infrastructure
 
 Install mesos on 3 node:
 - Node 1: Zookeeper, mesos-master, meosos-slave and marathon
@@ -9,14 +9,14 @@ Install mesos on 3 node:
 - Node 3: mesos-slave
 and install docker on all node
 
-1.1 Install docker
+###1.1 Install docker
 
 On all node:
 ```
 sudo wget -qO- https://get.docker.com/ | sh
 sudo usermod -aG docker `whoami`
 ```
-1.2 Install mesos
+###1.2 Install mesos
 
 - On node 1: install java8 for marathon 
 ```
