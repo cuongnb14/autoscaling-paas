@@ -47,10 +47,8 @@ class WebAppView(APIView):
                 if WebApp.objects.filter(name=app_name):
                     data = {"status": "error", "message": "app name {} already existed".format(app_name)}
                 else:
-                    app.name = new_app["name"]
-                    app.min_instances = new_app["min_instances"]
-                    app.max_instances = new_app["max_instances"]
-                    app.github_url = new_app["github_url"]
+                    for field, value in new_app:
+                        setattr(app,field,value)
                     app.user = request.user
                     app.save()
                     data = {"status": "success", "message": "create app {} success".format(app_name)}
