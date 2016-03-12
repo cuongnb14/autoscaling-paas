@@ -8,8 +8,25 @@ from apiv1.serializers import *
 from django.core import serializers
 from rest_framework import viewsets
 from apiv1.utils import *
-import json
+from django.http import Http404
 # Create your views here.
+from django.http import JsonResponse
+from rest_framework.exceptions import APIException
+
+def http404(request):
+    return JsonResponse({
+        'status': "404",
+        'error': 'URI not found: {}'.format(request.path)
+    })
+
+class PageNotFound(APIException):
+    status_code = 404
+    default_detail = 'URI not found'
+    def __init__(self, path):
+        if path:
+             self.detail = self.default_detail + ": " + path
+        else:
+             self.detail = self.default_detail
 
 class WebAppView(APIView):
     def get(self, request, app_name):
@@ -39,6 +56,8 @@ class WebAppView(APIView):
         return Response("Unserialize object!")
 
     def post(self, request, app_name):
+        if app_name:
+            raise PageNotFound(request.path)
         new_app = request.data
         try:
             app = WebApp()
@@ -77,7 +96,7 @@ class WebAppView(APIView):
 
 class PolicyView(APIView):
 
-    def get(self, request, app_name):
+    def get(self, request, app_name, policy_id):
         try:
             app = WebApp.objects.filter(name=app_name)[0]
             policies = app.policy_set.all()
@@ -88,7 +107,7 @@ class PolicyView(APIView):
             serializer.is_valid()
         return Response(serializer.data)
 
-    def post(self, request, app_name):
+    def post(self, request, app_name, policy_id):
         new_policy = request.data
         try:
             policy = Policy()
@@ -108,3 +127,6 @@ class PolicyView(APIView):
         serializer = MessageSerializer(data=data)
         serializer.is_valid()
         return Response(serializer.data)
+
+    def delete(self, request, app_name, policy_id):
+        pass
