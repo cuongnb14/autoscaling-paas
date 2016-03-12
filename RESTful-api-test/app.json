@@ -1,0 +1,5 @@
+{
+    "name": "admin_bot1",
+    "min_instances": 1,
+    "max_instances": 4
+}
