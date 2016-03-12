@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class WebApp(TimeStampedModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30, unique=True)
+    github_url = models.CharField(max_length=255)
     min_instances = models.IntegerField()
     max_instances = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,7 +47,7 @@ class Policy(TimeStampedModel):
     scale_up_wait = models.IntegerField()
     scale_down_wait = models.IntegerField()
     disabled = models.BooleanField(default=False)
-    
+
     class Meta:
         db_table = "autoscaling_policies"
 
@@ -56,4 +57,4 @@ class Setting(TimeStampedModel):
     value = models.CharField(max_length=256)
 
     class Meta:
-        db_table = "autoscaling_setting"         
+        db_table = "autoscaling_setting"
