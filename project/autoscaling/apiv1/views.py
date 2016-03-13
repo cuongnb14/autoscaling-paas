@@ -9,9 +9,9 @@ from django.core import serializers
 from rest_framework import viewsets
 from apiv1.utils import *
 from django.http import Http404
-# Create your views here.
 from django.http import JsonResponse
 from rest_framework.exceptions import APIException
+import traceback
 
 def http404(request):
     return JsonResponse({
@@ -66,7 +66,7 @@ class WebAppView(APIView):
                 if WebApp.objects.filter(name=app_name):
                     data = {"status": "error", "message": "app name {} already existed".format(app_name)}
                 else:
-                    for field, value in new_app:
+                    for field, value in new_app.items():
                         setattr(app,field,value)
                     app.user = request.user
                     app.save()
@@ -75,6 +75,7 @@ class WebAppView(APIView):
                 data = {"status": "error", "message": "app name must start with your's username_"}
         except Exception as e:
             data = {"status": "error", "message": str(e)}
+            traceback.print_exc()
 
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
@@ -118,31 +119,43 @@ class WebAppView(APIView):
         return Response("Unserialize object!")
 
     def delete(self, request, app_name):
-        marathon_client = get_marathon_client()
-        app = WebApp.objects.filter(name=app_name).first()
-        if app is None or app.user.id is not request.user.id:
+        try:
+            marathon_client = get_marathon_client()
+            app = request.user.webapp_set.get(name=app_name)
+            if app is None or app.user.id is not request.user.id:
+                data = {"status": "error", "message": "app {} does not exist".format(app_name)}
+            else:
+                app.delete()
+                try:
+                    marathon_client.delete_app(app_name,force=True)
+                except:
+                    pass
+                data = {"status": "success", "message": "delete app {} success".format(app_name)}
+        except WebApp.DoesNotExist as e:
             data = {"status": "error", "message": "app {} does not exist".format(app_name)}
-        else:
-            app.delete()
-            marathon_client.delete_app(app_name,force=True)
-            data = {"status": "success", "message": "delete app {} success".format(app_name)}
+
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!"+request.data)
+        return Response("Unserialize object!")
 
 class PolicyView(APIView):
 
     def get(self, request, app_name, policy_id):
         try:
-            app = WebApp.objects.filter(name=app_name)[0]
-            policies = app.policy_set.all()
-            serializer = PolicySerializer(policies, many=True)
-        except IndexError as e:
-            data = {"status": "error", "message": "app {} does not exist".format(app_name)}
+            app = request.user.webapp_set.get(name=app_name).first()
+            if app is None:
+                data = {"status": "error", "message": "app {} does not exist".format(app_name)}
+                serializer = MessageSerializer(data=data)
+            else:
+                policies = app.policy_set.all()
+                serializer = PolicySerializer(policies, many=True)
+        except Exception as e:
+            data = {"status": "error", "message": str(e)}
             serializer = MessageSerializer(data=data)
-            serializer.is_valid()
-        return Response(serializer.data)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response("Unserialize object!")
 
     def post(self, request, app_name, policy_id):
         new_policy = request.data
@@ -150,7 +163,7 @@ class PolicyView(APIView):
             policy = Policy()
             for field, value in new_policy.items():
                 setattr(policy,field,value)
-            app = WebApp.objects.filter(name=app_name).first()
+            app = request.user.webapp_set.get(name=app_name).first()
             if app is None:
                 data = {"status": "error", "message": "app {} does not exist".format(app_name)}
                 serializer = MessageSerializer(data=data)
@@ -162,8 +175,21 @@ class PolicyView(APIView):
             data = {"status": "error", "message": str(e)}
 
         serializer = MessageSerializer(data=data)
-        serializer.is_valid()
-        return Response(serializer.data)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response("Unserialize object!")
 
     def delete(self, request, app_name, policy_id):
-        pass
+        app = request.user.webapp_set.get(name=app_name).first()
+        if app is None:
+            serializer = get_message_serializer("error", "app {} does not exist".format(app_name))
+        else:
+            policy = app.policy_set.get(pk=policy_id)
+            if policy == None:
+                serializer = get_message_serializer("error", "policy id {} does not exist".format(policy_id))
+            else:
+                policy.delete()
+                serializer = get_message_serializer("success", "policy id {} deleted".format(policy_id))
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response("Unserialize object!")
