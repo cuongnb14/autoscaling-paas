@@ -124,7 +124,7 @@ class WebAppView(APIView):
             data = {"status": "error", "message": "app {} does not exist".format(app_name)}
         else:
             app.delete()
-            marathon_client.delete_app(app_name)
+            marathon_client.delete_app(app_name,force=True)
             data = {"status": "success", "message": "delete app {} success".format(app_name)}
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
