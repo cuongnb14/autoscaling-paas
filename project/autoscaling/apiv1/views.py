@@ -81,6 +81,42 @@ class WebAppView(APIView):
             return Response(serializer.data)
         return Response("Unserialize object!")
 
+    def put(self, request, app_name):
+        try:
+            marathon_client = get_marathon_client()
+            action = request.data['action']
+            app = request.user.webapp_set.get(name=app_name)
+            data = None
+            if app is None:
+                data = {"status": "error", "message": "app `{}` dose not existed".format(app_name)}
+            else:
+                if action == "autoscaling":
+                    data = {"status": "success", "message": "autoscaling to {} success".format(request.data['value'])}
+                elif action == "restart":
+                    marathon_client.restart_app(app_name)
+                    data = {"status": "success", "message": "restarting app {}".format(app_name)}
+                elif action == "stop":
+                    marathon_client.scale_app(app_name, 0, force=True)
+                    data = {"status": "success", "message": "stoping app {}".format(app_name)}
+                elif action == "start":
+                    marathon_client.scale_app(app_name, app.min_instances)
+                    data = {"status": "success", "message": "starting app {}".format(app_name)}
+                elif action == "scale":
+                    instances = request.data["value"]
+                    if instances > app.max_instances or instances < app.min_instances:
+                        data = {"status": "error", "message": "number instances must in [{},{}]".format(app.min_instances, app.max_instances)}
+                    else:
+                        marathon_client.scale_app(app_name, instances)
+                        data = {"status": "success", "message": "scaling app {}".format(app_name)}
+                else:
+                    data = {"status": "error", "message": "action not found"}
+        except Exception as e:
+            data = {"status": "error", "message": str(e)}
+        serializer = MessageSerializer(data=data)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response("Unserialize object!")
+
     def delete(self, request, app_name):
         marathon_client = get_marathon_client()
         app = WebApp.objects.filter(name=app_name).first()
@@ -88,11 +124,12 @@ class WebAppView(APIView):
             data = {"status": "error", "message": "app {} does not exist".format(app_name)}
         else:
             app.delete()
+            marathon_client.delete_app(app_name)
             data = {"status": "success", "message": "delete app {} success".format(app_name)}
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return Response("Unserialize object!"+request.data)
 
 class PolicyView(APIView):
 
