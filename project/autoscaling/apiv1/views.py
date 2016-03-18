@@ -12,6 +12,8 @@ from django.http import Http404
 from django.http import JsonResponse
 from rest_framework.exceptions import APIException
 import traceback
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 def http404(request):
     return JsonResponse({
@@ -28,6 +30,12 @@ class PageNotFound(APIException):
         else:
              self.detail = self.default_detail
 
+
+class LoginView(APIView):
+    def post(self, request):
+        return Response("Unserialize object!")
+
+@permission_classes((IsAuthenticated,))
 class WebAppView(APIView):
     def get(self, request, app_name):
         try:
@@ -139,6 +147,7 @@ class WebAppView(APIView):
             return Response(serializer.data)
         return Response("Unserialize object!")
 
+@permission_classes((IsAuthenticated,))
 class PolicyView(APIView):
 
     def get(self, request, app_name, policy_id):
