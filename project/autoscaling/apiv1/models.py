@@ -9,6 +9,7 @@ class WebApp(TimeStampedModel):
     github_url = models.CharField(max_length=255)
     min_instances = models.IntegerField()
     max_instances = models.IntegerField()
+    autoscaling = models.CharField(max_length=255, default='off')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
