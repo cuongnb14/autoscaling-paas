@@ -14,6 +14,7 @@ from rest_framework.exceptions import APIException
 import traceback
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
 
 def http404(request):
     return JsonResponse({
@@ -33,7 +34,19 @@ class PageNotFound(APIException):
 
 class LoginView(APIView):
     def post(self, request):
-        return Response("Unserialize object!")
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # the password verified for the user
+            if user.is_active:
+                msg = {"status": "success", "message": "login success"}
+            else:
+                msg = {"status": "error", "message": "The password is valid, but the account has been disabled!"}
+        else:
+            # the authentication system was unable to verify the username and password
+            msg = {"status": "error", "message": "The username and password were incorrect."}
+        return JsonResponse(msg)
 
 @permission_classes((IsAuthenticated,))
 class WebAppView(APIView):
