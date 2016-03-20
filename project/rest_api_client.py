@@ -78,18 +78,31 @@ class ASClient:
             response = self._request("get","apps/"+command[2])
             print(response.text)
 
-        elif command[1] == "new":
+        elif command[1] == "create":
             if command[2] == '-f':
-                with open(command[3], 'r') as file_data:
-                    content = file_data.read()
-                    response = self._request("post", "apps", content)
-                    print(response.text)
+                content = self._get_content_file(command[3])
+                response = self._request("post", "apps", content)
+                print(response.text)
             else:
                 pass
 
         elif command[1] == 'delete':
             response = self._request("delete","apps/"+command[2])
             print(response.text)
+
+        elif command[1] == 'policy':
+            if command[2] == '-i':
+                response = self._request("get","apps/{}/policies".format(command[3]))
+                print(response.text)
+            elif command[2] == 'delete':
+                response = self._request("delete","apps/{}/policies/{}".format(command[3],comand[4]))
+                print(response.text)
+            elif command[3] == 'add':
+
+
+    def _get_content_file(self, file_name):
+        with open(file_name, 'r') as file_data:
+            return content = file_data.read()
 
     def exit(self, command):
         sys.exit()
