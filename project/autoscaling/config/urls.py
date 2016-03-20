@@ -17,9 +17,18 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.response import Response
 import apiv1
+from django.views.generic import TemplateView
+
+class SimpleStaticView(TemplateView):
+    def get_template_names(self):
+        return [self.kwargs.get('template_name') + ".html"]
+
+    def get(self, request, *args, **kwargs):
+        return super(SimpleStaticView, self).get(request, *args, **kwargs)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^(?P<template_name>\w+)$', SimpleStaticView.as_view(), name='static_view'),
     url(r'^api/v1/', include('apiv1.urls', namespace="apiv1")),
 ]
 
