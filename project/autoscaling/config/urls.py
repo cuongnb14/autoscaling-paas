@@ -27,9 +27,12 @@ class SimpleStaticView(TemplateView):
         return super(SimpleStaticView, self).get(request, *args, **kwargs)
 
 urlpatterns = [
+    url(r'^api/v1/', include('apiv1.urls', namespace="apiv1")),
     url(r'^admin/', admin.site.urls),
     url(r'^(?P<template_name>\w+)$', SimpleStaticView.as_view(), name='static_view'),
-    url(r'^api/v1/', include('apiv1.urls', namespace="apiv1")),
+    url(r'^$', TemplateView.as_view(template_name='dashboard.html')),
+
+
 ]
 
 handler404 = apiv1.views.http404
