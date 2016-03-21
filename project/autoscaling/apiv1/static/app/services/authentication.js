@@ -22,12 +22,15 @@ angular.module('Authentication')
                });
         };
 
-        service.SetCredentials = function (username, password) {
-            var authdata = Base64.encode(username + ':' + password);
+        service.SetCredentials = function (user, password) {
+            var authdata = Base64.encode(user.username + ':' + password);
 
             $rootScope.globals = {
-                currentUser: {
-                    username: username,
+                user: {
+                    username: user.username,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
                     authdata: authdata
                 }
             };

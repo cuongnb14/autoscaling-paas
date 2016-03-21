@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html >
-<html ng-app="BasicHttpAuthExample">
+<html ng-app="BasicHttpAuth">
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
@@ -30,7 +30,7 @@
 </head>
 <body>
   {% verbatim %}
-  <section class="container" ng-app="Login" ng-controller='LoginController'>
+  <section class="container" ng-controller='LoginController'>
     <div class="login">
       <h1>Welcome</h1>
       <div ng-show="error" class="alert alert-danger">{{error}}</div>

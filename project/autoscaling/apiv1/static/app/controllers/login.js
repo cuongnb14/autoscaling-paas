@@ -12,7 +12,7 @@ angular.module('Authentication')
             $scope.dataLoading = true;
             AuthenticationService.Login($scope.username, $scope.password, function(response) {
                 if(response.status == "success") {
-                    AuthenticationService.SetCredentials($scope.username, $scope.password);
+                    AuthenticationService.SetCredentials(response.user, $scope.password);
                     window.location.href = 'http://localhost:8000/dashboard';
                 } else {
                     $scope.error = response.message;

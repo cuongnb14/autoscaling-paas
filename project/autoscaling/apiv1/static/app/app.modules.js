@@ -2,35 +2,34 @@
 
 // declare modules
 angular.module('Authentication', []);
-// angular.module('Home', []);
+angular.module('RESTful', []);
 angular.module('Login', ['Authentication']);
 
 angular.module('Registration', ['Authentication']);
 
-angular.module('BasicHttpAuthExample', [
+angular.module('WebApp', ['RESTful']);
+
+angular.module('Database', ['RESTful']);
+
+angular.module('BasicHttpAuth', [
     'Authentication',
     'ngRoute',
-    'ngCookies'
+    'ngCookies',
+    'WebApp',
+    'Database',
 ])
 
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+        if ($rootScope.globals.user) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.user.authdata; // jshint ignore:line
         }
-
-        // $rootScope.$on('$locationChangeStart', function (event, next, current) {
-        //     // redirect to login page if not logged in
-        //     if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
-        //         $location.path('/login');
-        //     }
-        // });
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
             // redirect to login page if not logged in
-            if (window.location.href !== 'http://localhost:8000/login' && !$rootScope.globals.currentUser) {
+            if (window.location.href !== 'http://localhost:8000/login' && !$rootScope.globals.user) {
                 window.location.href = 'http://localhost:8000/login';
             }
         });
