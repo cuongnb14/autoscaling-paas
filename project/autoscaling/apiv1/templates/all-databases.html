@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+  <h1>
+    Database
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Databases</li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row" ng-controller="DatabaseController">
+
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">All Database</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example2" class="table table-bordered table-hover table-striped ">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>Host</th>
+                  <th>Port</th>
+                  <th>Version</th>
+                  <th>Username</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% verbatim %}
+                <tr ng-repeat="database in databases">
+                  <td>{{database.id}}</td>
+                  <td>{{database.image.type_db}}</td>
+                  <td>{{database.host}}</td>
+                  <td>{{database.port}}</td>
+                  <td>{{database.image.version}}</td>
+                  <td>{{database.username}}</td>
+                </tr>
+                {% endverbatim %}
+                </tbody>
+
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+  </div>
+</section>
+{% endblock content%}

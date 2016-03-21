@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+{% verbatim %}
+<section class="content-header">
+  <h1>
+    Dashboard
+    <small>Version 2.0</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Dashboard</li>
+  </ol>
+</section>
+{% endverbatim %}
+<section class="content">
+  {% verbatim %}
+
+  <div class="row" ng-controller="WebAppController">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Web Application</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+              <div class="row" >
+
+                <div class="col-lg-3 col-xs-6" ng-repeat="app in apps">
+                  <!-- small box -->
+                  <div class="small-box bg-aqua">
+                    <div class="inner">
+                      <h3>{{app.instances}}</h3>
+                      <p>{{app.name}}</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-cogs"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+
+                <!-- /.col -->
+              </div>
+
+              <!-- /.row -->
+            </div>
+            <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+
+  <div class="row" ng-controller="DatabaseController">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Database</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+              <div class="row" >
+
+                <div class="col-lg-3 col-xs-6" ng-repeat="database in databases">
+                  <!-- small box -->
+                  <div class="small-box bg-aqua">
+                    <div class="inner">
+                      <h3>{{database.image.type_db}} {{database.image.version}}</h3>
+                      <p>{{database.host}}:{{database.port}}</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-database"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+
+                <!-- /.col -->
+              </div>
+
+              <!-- /.row -->
+            </div>
+            <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+
+
+
+      {% endverbatim %}
+</section>
+{% endblock content%}
