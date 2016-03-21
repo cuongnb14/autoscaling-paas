@@ -15,19 +15,6 @@ class WebApp(TimeStampedModel):
     class Meta:
         db_table = "autoscaling_web_app"
 
-class DatabaseApp(TimeStampedModel):
-    id = models.AutoField(primary_key=True)
-    type_db = models.CharField(max_length=10)
-    host = models.CharField(max_length=45)
-    port = models.IntegerField()
-    username = models.CharField(max_length=45)
-    root_password = models.CharField(max_length=60)
-    version = models.CharField(max_length=10)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "autoscaling_database_app"
-
 class DatabaseImage(TimeStampedModel):
     id = models.AutoField(primary_key=True)
     type_db = models.CharField(max_length=10)
@@ -36,6 +23,20 @@ class DatabaseImage(TimeStampedModel):
 
     class Meta:
         db_table = "autoscaling_database_image"
+
+class DatabaseApp(TimeStampedModel):
+    id = models.AutoField(primary_key=True)
+    host = models.CharField(max_length=45)
+    port = models.IntegerField()
+    username = models.CharField(max_length=45)
+    root_password = models.CharField(max_length=60)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ForeignKey(DatabaseImage, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "autoscaling_database_app"
+
+
 
 class Policy(TimeStampedModel):
     id = models.AutoField(primary_key=True)

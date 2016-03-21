@@ -21,7 +21,8 @@ class WebAppSerializer(serializers.Serializer):
 class DatabaseAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatabaseApp
-        fields = ('id', 'host', 'port', 'mysql_version',)
+        fields = ('id', 'host', 'port', 'username', 'root_password', 'image')
+        depth = 1
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
