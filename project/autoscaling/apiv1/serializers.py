@@ -3,10 +3,10 @@ from apiv1.models import *
 from rest_framework import serializers
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('username', 'email', 'groups')
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name',)
 
 class WebAppSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=256)
@@ -31,4 +31,3 @@ class PolicySerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.Serializer):
     status = serializers.CharField(max_length=45)
     message = serializers.CharField(max_length=256)
-   

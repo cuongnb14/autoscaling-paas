@@ -23,9 +23,13 @@ def get_info_app(app, marathon_client):
 
 def get_marathon_client():
     try:
-        MARATHON_HOST = "10.10.10.51"#Setting.objects.filter(name="marathon_host").first().value
+        MARATHON_HOST = "10.10.10.53"#Setting.objects.filter(name="marathon_host").first().value
         MARATHON_PORT = 8080#Setting.objects.get(name="marathon_port").first().value
         marathon_client = MarathonClient('http://{}:{}'.format(MARATHON_HOST, MARATHON_PORT))
         return marathon_client
     except Exception as e:
         raise Exception("unconnect to marathon")
+
+def get_message_serializer(status, message):
+    data = {"status": status, "message": message}
+    return MessageSerializer(data=data)

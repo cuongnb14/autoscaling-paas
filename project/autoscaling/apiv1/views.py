@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
+from django.contrib.auth.models import User, Group
 from rest_framework import authentication, permissions
 from django.contrib.auth import models
 from apiv1.models import *
@@ -15,6 +16,12 @@ import traceback
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
+from django.db.models import Q
+from rest_framework.authentication import BasicAuthentication
+
+# from rest_framework.decorators import parser_classes
+# from rest_framework.parsers import FormParser
+
 
 def http404(request):
     return JsonResponse({
@@ -31,12 +38,12 @@ class PageNotFound(APIException):
         else:
              self.detail = self.default_detail
 
-
+#@parser_classes((FormParser,))
 class LoginView(APIView):
+
     def post(self, request):
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
+        auth_user = request.data
+        user = authenticate(username=auth_user.get("username"), password=auth_user.get("password"))
         if user is not None:
             # the password verified for the user
             if user.is_active:
@@ -44,12 +51,38 @@ class LoginView(APIView):
             else:
                 msg = {"status": "error", "message": "The password is valid, but the account has been disabled!"}
         else:
-            # the authentication system was unable to verify the username and password
-            msg = {"status": "error", "message": "The username and password were incorrect."}
+            # the authentication system was unable to verify from rest_framework.decorators import parser_classes
+            msg = {"status": "error", "message": "The username or password is not valid"}
         return JsonResponse(msg)
 
-@permission_classes((IsAuthenticated,))
+#@parser_classes((FormParser,))
+class RegistrationView(APIView):
+
+    def post(self, request):
+        try:
+            user = request.data
+            user_avalible = User.objects.filter(email=user.get("email")).first()
+            if user_avalible:
+                msg = {"status": "error", "message": "Email already existed"}
+            else:
+                user_avalible = User.objects.filter(username=user.get("username")).first()
+                if user_avalible:
+                    msg = {"status": "error", "message": "Username already existed"}
+                else:
+                    new_user = User.objects.create_user(user.get("username"), user.get("email"), user.get("password"))
+                    new_user.first_name = user.get("first_name")
+                    new_user.last_name = user.get("last_name")
+                    new_user.save()
+                msg = {"status": "success", "message": "Create user success"}
+        except Exception as e:
+            msg = {"status": "error", "message": str(e)}
+        return JsonResponse(msg)
+
+
 class WebAppView(APIView):
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, app_name):
         try:
             marathon_client = get_marathon_client
