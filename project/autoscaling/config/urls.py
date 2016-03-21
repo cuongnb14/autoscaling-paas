@@ -26,13 +26,12 @@ class SimpleStaticView(TemplateView):
     def get(self, request, *args, **kwargs):
         return super(SimpleStaticView, self).get(request, *args, **kwargs)
 
+
 urlpatterns = [
     url(r'^api/v1/', include('apiv1.urls', namespace="apiv1")),
     url(r'^admin/', admin.site.urls),
-    url(r'^(?P<template_name>\w+)$', SimpleStaticView.as_view(), name='static_view'),
-    url(r'^$', TemplateView.as_view(template_name='dashboard.html')),
-
-
+    url(r'^ui/(?P<template_name>[\w\-]+)$', SimpleStaticView.as_view(), name='static_view'),
+    url(r'^ui$', TemplateView.as_view(template_name='dashboard.html'), name="home"),
 ]
 
 handler404 = apiv1.views.http404
