@@ -1,0 +1,66 @@
+{% load staticfiles %}
+<!DOCTYPE html >
+<html ng-app="BasicHttpAuthExample">
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Registration | Autoscaling</title>
+  <link rel="stylesheet" href="{% static "assets/css/login-style.css" %}">
+  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <!-- angularjs lib -->
+  <script src="http://code.jquery.com/jquery-2.2.2.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.js"></script>
+
+  <script src="{% static "app/app.modules.js" %}"></script>
+
+  <!-- angular services -->
+  <script src="{% static "app/services/authentication.js" %}"></script>
+
+  <!-- angular controllers -->
+  <script src="{% static "app/controllers/registration.js" %}"></script>
+
+
+</head>
+<body>
+  {% verbatim %}
+  <section class="container" ng-app="Registration" ng-controller='RegistrationController'>
+    <div class="login">
+      <h1>Registration</h1>
+      <div ng-show="error" class="alert alert-danger">{{error}}</div>
+      <form class="form" name="form" novalidate ng-submit="register()">
+
+        <span ng-show="form.username.$dirty && form.username.$error.required">Username is required</span>
+        <p><input type="text" name="username" ng-model="username" required placeholder="Username"></p>
+
+        <span ng-show="form.password.$dirty && form.password.$error.required">Password is required</span>
+        <p><input type="password" name="password" ng-model="password" required placeholder="Password"></p>
+
+        <span ng-show="form.email.$dirty && form.email.$error.required">Email is required</span>
+        <p><input type="email" name="email" ng-model="email" required placeholder="Email"></p>
+
+        <span ng-show="form.first_name.$dirty && form.first_name.$error.required">First name is required</span>
+        <p><input type="text" name="first_name" ng-model="first_name" required placeholder="First Name"></p>
+
+        <span ng-show="form.last_name.$dirty && form.last_name.$error.required">Last name is required</span>
+        <p><input type="text" name="last_name" ng-model="last_name" required placeholder="Last Name"></p>
+
+
+        <p class="submit"><button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-danger">Register</button>
+      <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/></p>
+      </form>
+    </div>
+
+    <!-- <div class="login-help">
+      <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
+    </div> -->
+  </section>
+  {% endverbatim %}
+</body>
+</html>
