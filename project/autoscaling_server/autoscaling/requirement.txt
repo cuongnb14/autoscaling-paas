@@ -1,0 +1,3 @@
+marathon==0.7.6
+influxdb==2.12.0
+SQLAlchemy==1.0.10
