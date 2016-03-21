@@ -47,7 +47,8 @@ class LoginView(APIView):
         if user is not None:
             # the password verified for the user
             if user.is_active:
-                msg = {"status": "success", "message": "login success"}
+                user_response = {'username': user.username, 'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name}
+                msg = {"status": "success", "message": "login success", "user": user_response}
             else:
                 msg = {"status": "error", "message": "The password is valid, but the account has been disabled!"}
         else:
@@ -107,7 +108,7 @@ class WebAppView(APIView):
 
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def post(self, request, app_name):
         if app_name:
@@ -134,7 +135,7 @@ class WebAppView(APIView):
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def put(self, request, app_name):
         try:
@@ -170,7 +171,7 @@ class WebAppView(APIView):
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def delete(self, request, app_name):
         try:
@@ -191,11 +192,11 @@ class WebAppView(APIView):
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
-@permission_classes((IsAuthenticated,))
 class PolicyView(APIView):
-
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
     def get(self, request, app_name, policy_id):
         try:
             app = request.user.webapp_set.get(name=app_name).first()
@@ -210,7 +211,7 @@ class PolicyView(APIView):
             serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def post(self, request, app_name, policy_id):
         new_policy = request.data
@@ -232,7 +233,7 @@ class PolicyView(APIView):
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def delete(self, request, app_name, policy_id):
         app = request.user.webapp_set.get(name=app_name).first()
@@ -247,4 +248,13 @@ class PolicyView(APIView):
                 serializer = get_message_serializer("success", "policy id {} deleted".format(policy_id))
         if serializer.is_valid():
             return Response(serializer.data)
-        return Response("Unserialize object!")
+        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+
+class DatabaseView(APIView):
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, database_id):
+        databases = request.user.databaseapp_set.all()
+        serializer = DatabaseAppSerializer(databases, many=True)
+        return Response(serializer.data)

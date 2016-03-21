@@ -18,7 +18,7 @@ def get_info_app(app, marathon_client):
         temp['port'] = None
         temp['cpus'] = None
         temp['mem'] = None
-        temp['instances'] = None
+        temp['instances'] = 0
     return temp
 
 def get_marathon_client():
