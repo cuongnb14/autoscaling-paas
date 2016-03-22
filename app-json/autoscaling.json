@@ -1,0 +1,93 @@
+{
+  "id": "autoscaling",
+  "groups": [
+    {
+      "id": "monitor",
+      "apps":[
+        {
+          "id": "influxdb-db",
+          "cpus": 0.5,
+          "mem": 128,
+          "instances": 1,
+          "container": {
+              "type": "DOCKER",
+              "docker": {
+                  "image": "tutum/influxdb:0.8.8",
+                  "network": "BRIDGE",
+                  "portMappings": [{
+                      "containerPort": 8083,
+                      "hostPort": 31100,
+                      "protocol": "tcp"
+                  },
+                  {
+                      "containerPort": 8086,
+                      "hostPort": 31101,
+                      "protocol": "tcp"
+                  }]
+              }
+          },
+          "env": {
+              "PRE_CREATE_DB": "cadvisor"
+          },
+          "constraints": [
+              ["hostname", "CLUSTER", "10.10.10.51"],
+              ["hostname", "UNIQUE"]
+          ]
+        },{
+          "id": "cadvisor-monitor",
+          "cpus": 0.5,
+          "mem": 128,
+          "instances": 3,
+          "container": {
+              "type": "DOCKER",
+              "docker": {
+                  "image": "google/cadvisor:0.14.0",
+                  "network": "BRIDGE",
+                  "portMappings": [{
+                      "containerPort": 8080,
+                      "hostPort": 31102,
+                      "protocol": "tcp"
+                  }]
+              },
+              "volumes": [{
+                  "containerPath": "/rootfs",
+                  "hostPath": "/",
+                  "mode": "RO"
+              },{
+                  "containerPath": "/var/run",
+                  "hostPath": "/var/run",
+                  "mode": "RW"
+              },{
+                  "containerPath": "/var/lib/docker/",
+                  "hostPath": "/var/lib/docker/",
+                  "mode": "RO"
+              },{
+                  "containerPath": "/sys",
+                  "hostPath": "/sys",
+                  "mode": "RO"
+              }]
+          },
+          "args": ["-storage_driver=influxdb", "-storage_driver_db=cadvisor", "-storage_driver_host=10.10.10.51:31101"],
+          "constraints": [
+              ["hostname", "UNIQUE"]
+          ]
+        }
+      ]
+    },{
+      "id": "loadbalancer",
+      "apps": [
+        {
+          "id": "marathon-lb",
+          "cpus": 0.5,
+          "mem": 128,
+          "cmd": "sudo /autoscaling/marathon-lb/marathon_lb.py --marathon http://10.10.10.51:8080 --haproxy-config /etc/haproxy/haproxy.cfg --group external --sse",
+          "instances": 1,
+          "constraints": [
+              ["hostname", "CLUSTER", "10.10.10.51"],
+              ["hostname", "UNIQUE"]
+          ]
+        }
+      ]
+    }
+  ]
+}
