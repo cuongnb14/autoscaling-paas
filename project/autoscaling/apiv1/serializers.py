@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class WebAppSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=256)
+    github_url = serializers.CharField(max_length=256)
     min_instances = serializers.IntegerField()
     max_instances = serializers.IntegerField()
     status = serializers.CharField(max_length=10)

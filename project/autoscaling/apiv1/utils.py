@@ -4,6 +4,7 @@ from marathon import MarathonClient
 def get_info_app(app, marathon_client):
     temp = {}
     temp['name'] = app.name
+    temp['github_url'] = app.github_url
     temp['min_instances'] = app.min_instances
     temp['max_instances'] = app.max_instances
     try:
