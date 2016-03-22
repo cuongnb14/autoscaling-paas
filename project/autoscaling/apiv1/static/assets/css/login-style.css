@@ -179,7 +179,7 @@ body {
   margin-right: 4px;
   vertical-align: middle;
 }
-.login p.submit {
+.login .wrap-btn {
   text-align: right;
 }
 
@@ -234,7 +234,7 @@ input[type=text]:focus, input[type=password]:focus,input[type=email]:focus {
   outline-offset: 0;
 }
 
-input[type=submit] {
+.submit {
   padding: 0 18px;
   height: 29px;
   font-size: 12px;
@@ -256,7 +256,7 @@ input[type=submit] {
   -webkit-box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.15);
 }
-input[type=submit]:active {
+.submit:active {
   background: #cde5ef;
   border-color: #9eb9c2 #b3c0c8 #b4ccce;
   -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
