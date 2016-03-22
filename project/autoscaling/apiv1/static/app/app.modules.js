@@ -29,7 +29,7 @@ angular.module('BasicHttpAuth', [
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
             // redirect to login page if not logged in
-            if (window.location.href !== 'http://localhost:8000/ui/login' && !$rootScope.globals.user) {
+            if (!$rootScope.globals.user && (window.location.href !== 'http://localhost:8000/ui/login' && window.location.href !== 'http://localhost:8000/ui/registration')) {
                 window.location.href = 'http://localhost:8000/ui/login';
             }
         });

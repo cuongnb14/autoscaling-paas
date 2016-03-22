@@ -43,6 +43,7 @@
         <p><input type="password" name="password" ng-model="password" required placeholder="Password"></p>
 
         <span ng-show="form.email.$dirty && form.email.$error.required">Email is required</span>
+        <span ng-show="form.email.$dirty && form.email.$error.email">Email is invalid</span>
         <p><input type="email" name="email" ng-model="email" required placeholder="Email"></p>
 
         <span ng-show="form.first_name.$dirty && form.first_name.$error.required">First name is required</span>

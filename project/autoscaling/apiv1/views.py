@@ -74,7 +74,7 @@ class RegistrationView(APIView):
                     new_user.first_name = user.get("first_name")
                     new_user.last_name = user.get("last_name")
                     new_user.save()
-                msg = {"status": "success", "message": "Create user success"}
+                    msg = {"status": "success", "message": "Create user success"}
         except Exception as e:
             msg = {"status": "error", "message": str(e)}
         return JsonResponse(msg)
