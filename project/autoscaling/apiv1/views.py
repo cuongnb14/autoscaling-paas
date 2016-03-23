@@ -86,7 +86,7 @@ class WebAppView(APIView):
 
     def get(self, request, app_name):
         try:
-            marathon_client = get_marathon_client
+            marathon_client = get_marathon_client()
 
             if app_name:
                 app = request.user.webapp_set.get(name=app_name)
