@@ -111,23 +111,29 @@ class WebAppView(APIView):
         return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
     def post(self, request, app_name):
+        """Create new application"""
+
         if app_name:
             raise PageNotFound(request.path)
         new_app = request.data
         try:
             app = WebApp()
             app_name = new_app["name"]
-            if app_name.startswith(request.user.username):
-                if WebApp.objects.filter(name=app_name):
-                    data = {"status": "error", "message": "app name {} already existed".format(app_name)}
-                else:
-                    for field, value in new_app.items():
-                        setattr(app,field,value)
-                    app.user = request.user
-                    app.save()
-                    data = {"status": "success", "message": "create app {} success".format(app_name)}
+
+            if request.user.webapp_set.get(name=app_name):
+                data = {"status": "error", "message": "app name {} already existed".format(app_name)}
             else:
-                data = {"status": "error", "message": "app name must start with your's username_"}
+                # for field, value in new_app.items():
+                #     setattr(app,field,value)
+                app.name = new_app["name"]
+                app.github_url = new_app["github_url"]
+                app.min_instances = new_app["min_instances"]
+                app.max_instances = new_app["max_instances"]
+                app.user = request.user
+                app.status = "cloning"
+                app.save()
+                data = {"status": "success", "message": "create app {} success".format(app_name)}
+
         except Exception as e:
             data = {"status": "error", "message": str(e)}
             traceback.print_exc()
