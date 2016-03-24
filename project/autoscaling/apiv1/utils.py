@@ -16,17 +16,23 @@ def get_info_app(app, marathon_client):
         temp['mem'] = marathon_app.mem
         temp['instances'] = marathon_app.instances
     except Exception as e:
-        traceback.print_exc()
+        #traceback.print_exc()
         temp['port'] = None
         temp['cpus'] = None
         temp['mem'] = None
         temp['instances'] = 0
     return temp
 
+def get_setting(key, default):
+    setting = Setting.objects.filter(name=key).first()
+    if setting:
+        return setting.value
+    return default
+
 def get_marathon_client():
     try:
-        MARATHON_HOST = "10.10.10.51"#Setting.objects.filter(name="marathon_host").first().value
-        MARATHON_PORT = 8080#Setting.objects.get(name="marathon_port").first().value
+        MARATHON_HOST = get_setting("marathon_host", "10.10.10.51")
+        MARATHON_PORT = int(get_setting("marathon_port", 8080))
         marathon_client = MarathonClient('http://{}:{}'.format(MARATHON_HOST, MARATHON_PORT))
         return marathon_client
     except Exception as e:

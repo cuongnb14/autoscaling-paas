@@ -42,7 +42,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.js"></script>
 
   <link rel='stylesheet' href='{% static "assets/css/angular-loading-bar.css" %}' type='text/css' media='all' />
- <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+  <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+  <script src="{% static "assets/js/pace.js" %}"></script>
+
 
   <script src="{% static "app/app.modules.js" %}"></script>
 
@@ -137,19 +139,19 @@
               <span>Application</span>
               <i class="fa fa-angle-left pull-right"></i>
             </a>
-            <ul class="treeview-menu">
+            <ul class="treeview-menu menu-open">
               <li><a href="{% url "static_view" "all-apps"%}"><i class="fa fa-list"></i> All application</a></li>
               <li><a href="{% url "static_view" "new-app"%}"><i class="fa fa-plus"></i> New application</a></li>
             </ul>
           </li>
 
-          <li class="treeview">
+          <li class="treeview menu-open">
             <a href="#">
               <i class="fa fa-database"></i>
               <span>Database</span>
               <i class="fa fa-angle-left pull-right"></i>
             </a>
-            <ul class="treeview-menu">
+            <ul class="treeview-menu menu-open">
               <li><a href="{% url "static_view" "all-databases"%}"><i class="fa fa-list"></i> All database</a></li>
               <li><a href="{% url "static_view" "new-database"%}"><i class="fa fa-plus"></i> New database</a></li>
             </ul>

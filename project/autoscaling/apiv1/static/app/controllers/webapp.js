@@ -38,7 +38,16 @@ angular.module('WebApp')
       if ($rootScope.globals.user) {
           $scope.addApp = function() {
               $scope.dataLoading = true;
-              RESTfulService.addApp($scope.app_name, $scope.github_url, $scope.min_instances, $scope.max_instances, function(response){
+              RESTfulService.addApp($scope.app_name,
+                                    $scope.github_url,
+                                    $scope.min_instances,
+                                    $scope.max_instances,
+                                    $scope.env_db_hostname,
+                                    $scope.env_db_port,
+                                    $scope.env_db_name,
+                                    $scope.env_db_username,
+                                    $scope.env_db_password,
+              function(response){
                   toastr[response.status](response.message)
                   $scope.dataLoading = false;
               });

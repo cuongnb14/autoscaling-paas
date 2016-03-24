@@ -25,7 +25,7 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" name="form" novalidate ng-submit="addApp()">
+        <form role="form" name="form" novalidate ng-submit="addApp()" ng-init="max_instances=10;min_instances=1">
           <div class="box-body">
             <div class="form-group col-md-12">
               <label for="app_name">App name (ID)</label>
@@ -37,12 +37,35 @@
             </div>
             <div class="form-group col-md-6">
               <label for="min_instances">Min instances</label>
-              <input type="number" required value="1" class="form-control" id="min_instances" ng-model="min_instances" placeholder="Min instances">
+              <input type="number" required class="form-control" id="min_instances" ng-model="min_instances" placeholder="Min instances">
             </div>
             <div class="form-group col-md-6">
               <label for="max_instances">Max instances</label>
-              <input type="number" required value="10" class="form-control" id="max_instances" ng-model="max_instances" placeholder="Max instances">
+              <input type="number" required  class="form-control" id="max_instances" ng-model="max_instances" placeholder="Max instances">
             </div>
+
+            <hr />
+            <div class="form-group col-md-4">
+              <label for="env_db_hostname">ENVIRONMENT DATABASE HOSTNAME</label>
+              <input type="text" class="form-control" id="env_db_hostname" ng-model="env_db_hostname" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_port">ENVIRONMENT DATABASE PORT</label>
+              <input type="text" class="form-control" id="env_db_port" ng-model="env_db_port" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_name">ENVIRONMENT DATABASE NAME</label>
+              <input type="text" class="form-control" id="env_db_name" ng-model="env_db_name" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_username">ENVIRONMENT DATABASE USERNAME</label>
+              <input type="text" class="form-control" id="env_db_username" ng-model="env_db_username" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_password">ENVIRONMENT DATABASE PASSWORD</label>
+              <input type="text" class="form-control" id="env_db_password" ng-model="env_db_password" placeholder="">
+            </div>
+
 
           </div>
           <!-- /.box-body -->

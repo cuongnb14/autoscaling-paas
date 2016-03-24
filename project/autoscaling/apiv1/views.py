@@ -126,12 +126,17 @@ class WebAppView(APIView):
             if request.user.webapp_set.filter(name=app_name):
                 data = {"status": "error", "message": "app name {} already existed".format(app_name)}
             else:
-                # for field, value in new_app.items():
-                #     setattr(app,field,value)
                 app.name = new_app["name"]
                 app.github_url = new_app["github_url"]
                 app.min_instances = new_app["min_instances"]
                 app.max_instances = new_app["max_instances"]
+                app.env_hostname = get_setting("env_hostname", "10.10.10.51")
+                app.env_port = 0
+                app.env_db_hostname = new_app["env_db_hostname"]
+                app.env_db_port = new_app["env_db_port"]
+                app.env_db_name = new_app["env_db_name"]
+                app.env_db_username = new_app["env_db_username"]
+
                 app.user = request.user
                 app.status = "cloning"
                 app.save()
