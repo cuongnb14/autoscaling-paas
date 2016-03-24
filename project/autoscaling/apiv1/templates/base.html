@@ -29,6 +29,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+  <link rel="stylesheet" href= "{% static "assets/css/custom.css" %}">
   <!-- angularjs lib -->
   <script src="http://code.jquery.com/jquery-2.2.2.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
@@ -45,11 +46,26 @@
   <script src="{% static "app/controllers/webapp.js" %}"></script>
   <script src="{% static "app/controllers/login.js" %}"></script>
   <script src="{% static "app/controllers/database.js" %}"></script>
+
+<script src="{% static "assets/js/pace.js" %}"></script>
+  <script>
+      $( document ).ready(function() {
+          function display() {
+            $("body").css("visibility","visible")
+          }
+          setTimeout(display, 0);
+      });
+          paceOptions = {
+          elements: false,
+          restartOnPushState: false,
+          restartOnRequestAfter: false
+      }
+</script>
 </head>
 
 
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" style="visibility:visible">
 <div class="wrapper">
 
     <header class="main-header">
