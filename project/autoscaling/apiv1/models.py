@@ -11,6 +11,13 @@ class WebApp(TimeStampedModel):
     max_instances = models.IntegerField()
     status = models.CharField(max_length=30, default="cloning")
     autoscaling = models.CharField(max_length=255, default='off')
+    evn_hostname = models.CharField(max_length=45, default='10.10.10.51')
+    evn_port = models.CharField(max_length=45, default='0')
+    evn_db_hostname =  models.CharField(max_length=45, default='10.10.10.51')
+    evn_db_port =  models.CharField(max_length=45, default='0')
+    evn_db_username =  models.CharField(max_length=45, default='')
+    evn_db_password = models.CharField(max_length=45, default='')
+    evn_db_name = models.CharField(max_length=45, default='')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
