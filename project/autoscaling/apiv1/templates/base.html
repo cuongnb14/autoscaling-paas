@@ -41,6 +41,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.js"></script>
 
+  <link rel='stylesheet' href='{% static "assets/css/angular-loading-bar.css" %}' type='text/css' media='all' />
+ <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+
   <script src="{% static "app/app.modules.js" %}"></script>
 
   <!-- angular services -->
@@ -52,25 +55,11 @@
   <script src="{% static "app/controllers/login.js" %}"></script>
   <script src="{% static "app/controllers/database.js" %}"></script>
 
-<script src="{% static "assets/js/pace.js" %}"></script>
-  <script>
-      $( document ).ready(function() {
-          function display() {
-            $("body").css("visibility","visible")
-          }
-          setTimeout(display, 0);
-      });
-          paceOptions = {
-          elements: false,
-          restartOnPushState: false,
-          restartOnRequestAfter: false
-      }
-</script>
 </head>
 
 
 
-<body class="hold-transition skin-blue sidebar-mini" style="visibility:visible">
+<body class="hold-transition skin-purple sidebar-mini" >
 <div class="wrapper">
 
     <header class="main-header">
