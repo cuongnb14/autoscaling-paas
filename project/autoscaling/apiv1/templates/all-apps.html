@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+  <h1>
+    Database
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Aplication</li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row" ng-controller="GetAppController">
+
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">All Database</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example2" class="table table-bordered table-hover table-striped ">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Github url</th>
+                  <th>Min instances</th>
+                  <th>Max instances</th>
+                  <th>Status</th>
+                  <th>Instances</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% verbatim %}
+                  <tr ng-repeat="app in apps">
+                    <td>{{app.name}}</td>
+                    <td>{{app.github_url}}</td>
+                    <td>{{app.min_instances}}</td>
+                    <td>{{app.max_instances}}</td>
+                    <td>{{app.status}}</td>
+                    <td>{{app.instances}}</td>
+                  </tr>
+                {% endverbatim %}
+                </tbody>
+
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+  </div>
+</section>
+{% endblock content%}
