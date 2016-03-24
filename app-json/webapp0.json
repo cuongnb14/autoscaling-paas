@@ -1,0 +1,23 @@
+{
+    "id": "%(username)s.%(app_name)s",
+    "cpus": 0.5,
+    "mem": 128,
+    "instances": 1,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "eboraas/apache",
+            "network": "BRIDGE",
+            "portMappings": [{
+                "containerPort": 80,
+                "hostPort": 0,
+                "servicePort": %(service_port)d,
+                "protocol": "tcp"
+            }],
+            "parameters": [
+                { "key": "volume-driver", "value": "nfs" },
+                { "key": "volume", "value": "10.10.10.51/volume/%(username)s/%(app_name)s:/var/www" }
+            ]
+        }
+    }
+}
