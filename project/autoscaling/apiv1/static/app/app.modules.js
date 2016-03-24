@@ -17,6 +17,7 @@ angular.module('BasicHttpAuth', [
     'ngCookies',
     'WebApp',
     'Database',
+    'angular-loading-bar',
 ])
 
 .run(['$rootScope', '$location', '$cookieStore', '$http',

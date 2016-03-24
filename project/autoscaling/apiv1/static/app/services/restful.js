@@ -31,5 +31,12 @@ angular.module('RESTful')
                });
         };
 
+        service.deleteApp = function (app_name, callback) {
+            $http.delete('http://localhost:8000/api/v1/apps/'+app_name)
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         return service;
     }]);

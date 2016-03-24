@@ -216,6 +216,8 @@ class WebAppView(APIView):
                 data = {"status": "success", "message": "delete app {} success".format(app_name)}
         except WebApp.DoesNotExist as e:
             data = {"status": "error", "message": "app {} does not exist".format(app_name)}
+        except Exception as e:
+            data = {"status": "error", "message": "Unknown error"}
 
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
