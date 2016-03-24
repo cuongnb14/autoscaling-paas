@@ -9,6 +9,7 @@ class WebApp(TimeStampedModel):
     github_url = models.CharField(max_length=255)
     min_instances = models.IntegerField()
     max_instances = models.IntegerField()
+    status = models.CharField(max_length=30, default="cloning")
     autoscaling = models.CharField(max_length=255, default='off')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -56,7 +57,7 @@ class Policy(TimeStampedModel):
 class Setting(TimeStampedModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30, unique=True)
-    value = models.CharField(max_length=256)
+    value = models.TextField()
 
     class Meta:
         db_table = "autoscaling_setting"
