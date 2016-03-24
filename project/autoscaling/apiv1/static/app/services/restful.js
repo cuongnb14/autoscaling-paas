@@ -20,5 +20,16 @@ angular.module('RESTful')
                   callback(response);
                });
         };
+
+        service.addApp = function (app_name, github_url, min_instances, max_instances, callback) {
+            $http.post('http://localhost:8000/api/v1/apps', { name: app_name,
+                                                              github_url:github_url,
+                                                              min_instances:min_instances,
+                                                              max_instances,max_instances})
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         return service;
     }]);

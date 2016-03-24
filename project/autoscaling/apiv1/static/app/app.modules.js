@@ -33,6 +33,4 @@ angular.module('BasicHttpAuth', [
                 window.location.href = 'http://localhost:8000/ui/login';
             }
         });
-
-
     }]);

@@ -18,6 +18,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from rest_framework.authentication import BasicAuthentication
+import os
+import shutil
+import threading
 
 # from rest_framework.decorators import parser_classes
 # from rest_framework.parsers import FormParser
@@ -120,7 +123,7 @@ class WebAppView(APIView):
             app = WebApp()
             app_name = new_app["name"]
 
-            if request.user.webapp_set.get(name=app_name):
+            if request.user.webapp_set.filter(name=app_name):
                 data = {"status": "error", "message": "app name {} already existed".format(app_name)}
             else:
                 # for field, value in new_app.items():
@@ -132,7 +135,9 @@ class WebAppView(APIView):
                 app.user = request.user
                 app.status = "cloning"
                 app.save()
-                data = {"status": "success", "message": "create app {} success".format(app_name)}
+                cloning = threading.Thread(target=self.__cloning, args=(app,), daemon=True)
+                cloning.start()
+                data = {"status": "success", "message": "create app {} success, app is cloning".format(app_name)}
 
         except Exception as e:
             data = {"status": "error", "message": str(e)}
@@ -142,6 +147,23 @@ class WebAppView(APIView):
         if serializer.is_valid():
             return Response(serializer.data)
         return JsonResponse({"status": "error", "message": "Unserialize object!"})
+
+    def __cloning(self, app):
+        try:
+            root_dir = "/home/bacuong/volume/"+app.user.username
+            app_dir = "{}/{}".format(root_dir, app.name)
+            if not os.path.isdir(root_dir):
+                os.makedirs(root_dir)
+
+            if os.path.isdir(app_dir):
+                shutil.rmtree(app_dir)
+
+            os.system("git clone {} {}".format(app.github_url, app_dir))
+            app.status = "cloned"
+        except Exception as e:
+            app.status = "clone failed: "+str(e)
+
+        app.save()
 
     def put(self, request, app_name):
         try:
