@@ -2,14 +2,56 @@
 
 angular.module('Database')
 
-.controller('DatabaseController',
+.controller('GetDatabasesController',
     ['$scope', '$rootScope', 'RESTfulService',
     function ($scope, $rootScope, RESTfulService) {
-        RESTfulService.getDatabases(function(response) {
+      var gds = this;
+
+        gds.init = function () {
+            RESTfulService.getDatabases(function(response) {
+                if(response.status != "error") {
+                    gds.databases = response;
+                } else {
+                    gds.databases = null;
+                }
+            });
+        }
+
+        gds.init();
+
+    }])
+
+.controller('GetDatabaseController',
+    ['$scope', '$rootScope', 'RESTfulService',
+    function ($scope, $rootScope, RESTfulService) {
+      var gd = this;
+
+        gd.init = RESTfulService.getDatabases(function(response) {
             if(response.status != "error") {
-                $scope.databases = response;
+                gd.database = response;
             } else {
-                $scope.databases = null;
+                gd.database = null;
             }
         });
+
+        gd.init()
+
+    }])
+
+.controller('SetDatabaseController',
+    ['$scope', '$rootScope', 'RESTfulService',
+    function ($scope, $rootScope, RESTfulService) {
+      var sd = this;
+
+      sd.addDatabase = function() {
+        RESTfulService.addDatabase(sd.database, function(response) {
+              toastr[response.status](response.message);
+        });
+      }
+
+
+
+
+
+
     }]);

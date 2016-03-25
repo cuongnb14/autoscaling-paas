@@ -1,21 +1,20 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block content %}
 <!-- Content Header (Page header) -->
 
 <section class="content-header">
   <h1>
     Database
-    <small>Version 2.0</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="{% url "home"%}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="{% url "static_view" "all-databases"%}"> Databases</a></li>
+    <li><a href="{% url "static_view" "all-databases"%}"> Database</a></li>
     <li class="active">New</li>
   </ol>
 </section>
 
-<section class="content">
+<section class="content" ng-controller="SetDatabaseController as sd">
   <div class="row">
     <div class="col-md-12">
 
@@ -26,32 +25,54 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form">
+        <form role="form" name="form" novalidate ng-submit="sd.addDatabase()">
           <div class="box-body">
-            <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            <div class="form-group col-md-12">
+              <label for="app_name">App name (ID)</label>
+              <input type="text" required class="form-control" id="app_name" ng-model="app_name" placeholder="Enter app name">
             </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <div class="form-group col-md-12">
+              <label for="github_url">Github url</label>
+              <input type="text" required class="form-control" id="github_url" ng-model="github_url" placeholder="Github url of application">
             </div>
-            <div class="form-group">
-              <label for="exampleInputFile">File input</label>
-              <input type="file" id="exampleInputFile">
+            <div class="form-group col-md-6">
+              <label for="min_instances">Min instances</label>
+              <input type="number" required class="form-control" id="min_instances" ng-model="min_instances" placeholder="Min instances">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="max_instances">Max instances</label>
+              <input type="number" required  class="form-control" id="max_instances" ng-model="max_instances" placeholder="Max instances">
+            </div>
 
-              <p class="help-block">Example block-level help text here.</p>
+            <hr />
+            <div class="form-group col-md-4">
+              <label for="env_db_hostname">ENVIRONMENT DATABASE HOSTNAME</label>
+              <input type="text" class="form-control" id="env_db_hostname" ng-model="env_db_hostname" placeholder="">
             </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"> Check me out
-              </label>
+            <div class="form-group col-md-4">
+              <label for="env_db_port">ENVIRONMENT DATABASE PORT</label>
+              <input type="text" class="form-control" id="env_db_port" ng-model="env_db_port" placeholder="">
             </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_name">ENVIRONMENT DATABASE NAME</label>
+              <input type="text" class="form-control" id="env_db_name" ng-model="env_db_name" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_username">ENVIRONMENT DATABASE USERNAME</label>
+              <input type="text" class="form-control" id="env_db_username" ng-model="env_db_username" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_password">ENVIRONMENT DATABASE PASSWORD</label>
+              <input type="text" class="form-control" id="env_db_password" ng-model="env_db_password" placeholder="">
+            </div>
+
+
           </div>
           <!-- /.box-body -->
 
           <div class="box-footer">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button class="submit btn" type="submit" ng-disabled="form.$invalid || dataLoading" >Submit</button>
+            <img ng-if="dataLoading" src="{% static "assets/img/loading.gif"%}"/>
           </div>
         </form>
       </div>

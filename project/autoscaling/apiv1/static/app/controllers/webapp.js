@@ -44,7 +44,7 @@ angular.module('WebApp')
             ga.updateApp = function() {
                 RESTfulService.updateApp(ga.app, function(response) {
                   toastr[response.status](response.message)
-                  $ga.init(app_name);
+                  ga.init(app_name);
                 });
             };
 
@@ -57,7 +57,6 @@ angular.module('WebApp')
       $rootScope.globals = $cookieStore.get('globals') || {};
       if ($rootScope.globals.user) {
           $scope.addApp = function() {
-              $scope.dataLoading = true;
               RESTfulService.addApp($scope.app_name,
                                     $scope.github_url,
                                     $scope.min_instances,
@@ -68,8 +67,7 @@ angular.module('WebApp')
                                     $scope.env_db_username,
                                     $scope.env_db_password,
               function(response){
-                  toastr[response.status](response.message)
-                  $scope.dataLoading = false;
+                  toastr[response.status](response.message);
               });
           };
 

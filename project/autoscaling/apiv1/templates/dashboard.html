@@ -38,13 +38,15 @@
                   <!-- small box -->
                   <div class="small-box bg-aqua">
                     <div class="inner">
-                      <h3>{{app.instances}}</h3>
-                      <p>{{app.name}}</p>
+                      <h3>{{app.name}}</h3>
+                      <p>{{app.instances}} instances running</p>
                     </div>
                     <div class="icon">
                       <i class="fa fa-cogs"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    {% endverbatim %}
+                    <a href="{% url "static_view" "edit-app"%}#{% verbatim%}?name={{app.name}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+
                   </div>
                 </div>
 
@@ -60,7 +62,7 @@
         <!-- /.col -->
       </div>
 
-  <div class="row" ng-controller="DatabaseController">
+  <div class="row" ng-controller="GetDatabasesController as gds">
         <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
@@ -77,11 +79,11 @@
 
               <div class="row" >
 
-                <div class="col-lg-3 col-xs-6" ng-repeat="database in databases">
+                <div class="col-lg-3 col-xs-6" ng-repeat="database in gds.databases">
                   <!-- small box -->
-                  <div class="small-box bg-aqua">
+                  <div class="small-box bg-yellow">
                     <div class="inner">
-                      <h3>{{database.image.type_db}} {{database.image.version}}</h3>
+                      <h3>Mysql</h3>
                       <p>{{database.host}}:{{database.port}}</p>
                     </div>
                     <div class="icon">
