@@ -11,9 +11,11 @@
   <!-- Bootstrap 3.3.5 -->
   <link rel="stylesheet" href= "{% static "assets/bootstrap/css/bootstrap.min.css" %}">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href= "{% static "assets/plugins/font-awesome/css/font-awesome.min.css" %}">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
+
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href= "{% static "assets/plugins/ionicons/ionicons.min.css" %}">
   <!-- jvectormap -->
   <link rel="stylesheet" href= "{% static "assets/plugins/jvectormap/jquery-jvectormap-1.2.2.css" %}">
   <!-- Theme style -->
@@ -32,14 +34,15 @@
 
   <link rel="stylesheet" href= "{% static "assets/css/custom.css" %}">
 
-  <script src="http://code.jquery.com/jquery-2.2.2.min.js"></script>
-  <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="{% static "assets/plugins/jQuery/jquery-2.2.2.min.js" %}"></script>
+
+  <link rel="stylesheet" href= "{% static "assets/plugins/toastr/toastr.min.css" %}">
+  <script src="{% static "assets/plugins/toastr/toastr.min.js" %}"></script>
 
   <!-- angularjs lib -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.js"></script>
+  <script src="{% static "assets/plugins/angular/angular.min.js" %}"></script>
+  <script src="{% static "assets/plugins/angular/angular-route.min.js" %}"></script>
+  <script src="{% static "assets/plugins/angular/angular-cookies.min.js" %}"></script>
 
   <link rel='stylesheet' href='{% static "assets/css/angular-loading-bar.css" %}' type='text/css' media='all' />
   <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
@@ -57,6 +60,7 @@
   <script src="{% static "app/controllers/login.js" %}"></script>
   <script src="{% static "app/controllers/database.js" %}"></script>
 
+  <script src="{% static "assets/js/custom.js" %}"></script>
 </head>
 
 
@@ -495,7 +499,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.1.4 -->
-<script src="{% static "assets/plugins/jQuery/jQuery-2.1.4.min.js" %}"></script>
+<!-- <script src="{% static "assets/plugins/jQuery/jQuery-2.1.4.min.js" %}"></script> -->
 <!-- Bootstrap 3.3.5 -->
 <script src="{% static "assets/bootstrap/js/bootstrap.min.js" %}"></script>
 <!-- FastClick -->
