@@ -19,5 +19,14 @@
                 { "key": "volume", "value": "10.10.10.51/volume/%(username)s/%(app_name)s:/var/www" }
             ]
         }
+    },
+    "env": {
+        "ENV_HOSTNAME": "%(env_hostname)s",
+        "ENV_PORT": "%(env_port)s",
+        "ENV_DB_HOSTNAME": "%(env_db_hostname)s",
+        "ENV_DB_PORT": "%(env_db_port)s",
+        "ENV_DB_NAME": "%(env_db_name)s",
+        "ENV_DB_USERNAME": "%(env_db_username)s",
+        "ENV_DB_PASSWORD": "%(env_db_password)s",
     }
 }
