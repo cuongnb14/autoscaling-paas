@@ -1,0 +1,25 @@
+{
+    "id": "autoscaling.phpmyadmin",
+    "cpus": 0.5,
+    "mem": 128,
+    "instances": 1,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "phpmyadmin/phpmyadmin",
+            "network": "BRIDGE",
+            "portMappings": [{
+                "containerPort": 80,
+                "hostPort": 0,
+                "servicePort": 31000,
+                "protocol": "tcp"
+            }]
+        }
+    },
+    "env": {
+        "PMA_ARBITRARY": "1"
+    },
+    "constraints": [
+        ["hostname", "CLUSTER", "10.10.10.51"]
+    ]
+}
