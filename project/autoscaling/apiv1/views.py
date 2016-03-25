@@ -111,7 +111,7 @@ class WebAppView(APIView):
 
         if serializer.is_valid():
             return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+        return JsonResponse({"status": "error", "message": "Unserialize object! "+str(serializer.errors)})
 
     def post(self, request, app_name):
         """Create new application"""
@@ -136,6 +136,7 @@ class WebAppView(APIView):
                 app.env_db_port = new_app["env_db_port"]
                 app.env_db_name = new_app["env_db_name"]
                 app.env_db_username = new_app["env_db_username"]
+                app.env_db_username = new_app["env_db_password"]
 
                 app.user = request.user
                 app.status = "cloning"
@@ -179,7 +180,18 @@ class WebAppView(APIView):
             if app is None:
                 data = {"status": "error", "message": "app `{}` dose not existed".format(app_name)}
             else:
-                if action == "autoscaling":
+                if action == "info":
+                    new_info = request.data
+                    app.min_instances = new_info["min_instances"]
+                    app.max_instances = new_info["max_instances"]
+                    app.env_db_hostname = new_info["env_db_hostname"]
+                    app.env_db_port = new_info["env_db_port"]
+                    app.env_db_name = new_info["env_db_name"]
+                    app.env_db_username = new_info["env_db_username"]
+                    app.env_db_username = new_info["env_db_password"]
+                    app.save()
+                    data = {"status": "success", "message": "Update info {} success".format(app_name)}
+                elif action == "autoscaling":
                     data = {"status": "success", "message": "autoscaling to {} success".format(request.data['value'])}
                 elif action == "restart":
                     marathon_client.restart_app(app_name)
@@ -197,8 +209,27 @@ class WebAppView(APIView):
                     else:
                         marathon_client.scale_app(app_name, instances)
                         data = {"status": "success", "message": "scaling app {}".format(app_name)}
+                elif action == "deploy":
+                    app_template = get_setting("app_template")
+                    app_json = app_template % {"username":request.user.username,
+                                                "app_name": app_name,
+                                                "service_port": app.env_port,
+                                                "env_port": app.env_port,
+                                                "env_hostname": app.env_hostname,
+                                                "env_db_hostname": app.env_db_hostname,
+                                                "env_db_port": app.env_db_port,
+                                                "env_db_name": app.env_db_name,
+                                                "env_db_username": app.env_db_username,
+                                                "env_db_password": app.env_db_password}
+
+                    try:
+                        app_marathon = get_marathon_app(app_json)
+                        marathon_client.create_app(app_marathon.id, app_marathon)
+                        data = {"status": "success", "message": "deploying app {}".format(app_name)}
+                    except Exception as e:
+                        data = {"status": "error", "message": "Unknown error"}
                 else:
-                    data = {"status": "error", "message": "action not found"}
+                    data = {"status": "error", "message": "Action not found"}
         except Exception as e:
             data = {"status": "error", "message": str(e)}
         serializer = MessageSerializer(data=data)

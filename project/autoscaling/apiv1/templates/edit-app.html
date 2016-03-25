@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+  <h1>
+    Application
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "home"%}"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{% url "static_view" "all-apps"%}"> App</a></li>
+    <li class="active">Edit</li>
+  </ol>
+</section>
+
+<section class="content" ng-controller="GetAppController as ga">
+  <div class="row">
+    <div class="col-md-12">
+
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Application infomations</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <form role="form" name="form" novalidate ng-submit="ga.updateApp()">
+          <div class="box-body">
+            <div class="form-group col-md-12">
+              <label for="app_name">App name (ID)</label>
+              <input type="text" required class="form-control" id="app_name" ng-model="ga.app.name" >
+            </div>
+            <div class="form-group col-md-12">
+              <label for="github_url">Github url</label>
+              <input type="text" required class="form-control" id="github_url" ng-model="ga.app.github_url" placeholder="Github url of application">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="min_instances">Min instances</label>
+              <input type="number" required class="form-control" id="min_instances" ng-model="ga.app.min_instances" placeholder="Min instances">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="max_instances">Max instances</label>
+              <input type="number" required  class="form-control" id="max_instances" ng-model="ga.app.max_instances" placeholder="Max instances">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="host">IP</label>
+              <input type="text" required  class="form-control" id="host" ng-model="ga.app.env_hostname" >
+            </div>
+            <div class="form-group col-md-6">
+              <label for="port">PORT</label>
+              <input type="text" required  class="form-control" id="port" ng-model="ga.app.env_port" >
+            </div>
+
+            <hr />
+            <div class="form-group col-md-4">
+              <label for="env_db_hostname">ENVIRONMENT DATABASE HOSTNAME</label>
+              <input type="text" class="form-control" id="env_db_hostname" ng-model="ga.app.env_db_hostname" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_port">ENVIRONMENT DATABASE PORT</label>
+              <input type="text" class="form-control" id="env_db_port" ng-model="ga.app.env_db_port" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_name">ENVIRONMENT DATABASE NAME</label>
+              <input type="text" class="form-control" id="env_db_name" ng-model="ga.app.env_db_name" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_username">ENVIRONMENT DATABASE USERNAME</label>
+              <input type="text" class="form-control" id="env_db_username" ng-model="ga.app.env_db_username" placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="env_db_password">ENVIRONMENT DATABASE PASSWORD</label>
+              <input type="text" class="form-control" id="env_db_password" ng-model="ga.app.env_db_password" placeholder="">
+            </div>
+
+
+          </div>
+          <!-- /.box-body -->
+
+          <div class="box-footer">
+            <button class="submit btn" type="submit" ng-disabled="form.$invalid" >Update</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock content%}

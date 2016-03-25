@@ -2,38 +2,58 @@
 
 angular.module('WebApp')
 
-.controller('GetAppController',
-    ['$scope', '$rootScope', 'RESTfulService', '$cookieStore',
-    function ($scope, $rootScope, RESTfulService, $cookieStore) {
+.controller('GetAppsController',
+    ['RESTfulService',
+    function (RESTfulService) {
+        var gas = this;
 
-      $rootScope.globals = $cookieStore.get('globals') || {};
-      if ($rootScope.globals.user) {
-          $scope.init = function() {
-              RESTfulService.getApps(function(response) {
-                  if(response.status != "error") {
-                      $scope.apps = response;
-                  } else {
-                      $scope.apps = null;
-                  }
-              });
-          };
-          $scope.init();
+        gas.init = function() {
+            RESTfulService.getApps(function(response) {
+                if(response.status != "error") {
+                    gas.apps = response;
+                } else {
+                    gas.apps = null;
+                }
+            });
+        };
+        gas.init();
 
-          $scope.deleteApp = function(app) {
-              RESTfulService.deleteApp(app.name, function(response){
-                  toastr[response.status](response.message)
-                  $scope.init();
-              });
-          };
-      }
-
-
-
+        gas.deleteApp = function(app) {
+            RESTfulService.deleteApp(app.name, function(response){
+                toastr[response.status](response.message)
+                $scope.init();
+            });
+        };
     }])
 
-.controller('AddAppController',
-    ['$scope', '$rootScope', 'RESTfulService', '$cookieStore',
-    function ($scope, $rootScope, RESTfulService, $cookieStore) {
+    .controller('GetAppController',
+        ['$location', 'RESTfulService',
+        function ($location, RESTfulService) {
+            var ga = this;
+            var app_name = $location.search().name;
+            ga.init = function(app_name) {
+                RESTfulService.getApp(app_name, function(response) {
+                    if(response.status != "error") {
+                        ga.app = response;
+                    } else {
+                        ga.app = null;
+                    }
+                });
+            };
+
+            ga.updateApp = function() {
+                RESTfulService.updateApp(ga.app, function(response) {
+                  toastr[response.status](response.message)
+                  $ga.init(app_name);
+                });
+            };
+
+            ga.init(app_name);
+        }])
+
+.controller('SetAppController',
+    ['RESTfulService',
+    function (RESTfulService) {
       $rootScope.globals = $cookieStore.get('globals') || {};
       if ($rootScope.globals.user) {
           $scope.addApp = function() {
