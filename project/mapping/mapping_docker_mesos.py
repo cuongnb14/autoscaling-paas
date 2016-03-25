@@ -25,8 +25,8 @@ influxdb_client = InfluxDBClient(
     )
 
 def mapping():
-    """Mapping docker container name with mesos task id 
-    
+    """Mapping docker container name with mesos task id
+
     @return list, list mapped [container-name, mesos-task-id]
     """
     containers = docker_client.containers()
@@ -60,12 +60,16 @@ def update_mapping():
         influxdb_client.write_points([data])
     except Exception as e:
         logger.error(e)
-    
+
 
 def main():
-    logging.getLogger("apscheduler.executors.default").setLevel("ERROR") 
+    logging.getLogger("apscheduler.executors.default").setLevel("ERROR")
     scheduler = BlockingScheduler()
-    scheduler.add_job(update_mapping, 'interval', seconds=TIME_INTERVAL)
+    try:
+        scheduler.add_job(update_mapping, 'interval', seconds=int(sys.argv[1]))
+    except Exception as e:
+        scheduler.add_job(update_mapping, 'interval', seconds=TIME_INTERVAL)
+
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
