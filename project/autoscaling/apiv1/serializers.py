@@ -28,8 +28,8 @@ class WebAppSerializer(serializers.Serializer):
 class DatabaseAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatabaseApp
-        fields = ('id', 'host', 'port', 'username', 'root_password', 'image')
-        depth = 1
+        fields = ('id', 'host', 'port', 'root_password')
+        #depth = 1
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
