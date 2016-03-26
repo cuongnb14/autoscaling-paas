@@ -48,7 +48,7 @@ def get_marathon_client():
 
 def get_marathon_app(app_json):
     app_dict = json.loads(app_json)
-    app_marathon = MarathonApp
+    app_marathon = MarathonApp()
     for key, value in app_dict.items():
         setattr(app_marathon, key, value)
     return app_marathon

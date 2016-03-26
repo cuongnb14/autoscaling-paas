@@ -45,6 +45,7 @@
                 <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Status</th>
                   <th class="col-sm-4">Host</th>
                   <th>Port</th>
                   <th class="col-sm-3">Root password</th>
@@ -56,6 +57,7 @@
                   {% verbatim %}
                 <tr ng-repeat="database in gds.databases">
                   <td>{{database.id}}</td>
+                  <td>{{database.status}}</td>
                   <td>{{database.host}}</td>
                   <td>{{database.port}}</td>
                   <td><div class="input-group" ng-init="database.pass='******'">

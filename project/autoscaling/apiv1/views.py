@@ -366,7 +366,8 @@ class DatabaseView(APIView):
                 marathon_client.create_app(app_marathon.id, app_marathon)
                 msg = {"status": "success", "message": "created and deploying database"}
             except Exception as e:
-                msg = {"status": "error", "message": "Unknown error when deploying database app"}
+                traceback.print_exc()
+                msg = {"status": "error", "message": "Unknown error when deploying database app"+str(database_json)}
 
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}
