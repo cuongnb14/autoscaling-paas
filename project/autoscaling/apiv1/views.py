@@ -21,6 +21,7 @@ from rest_framework.authentication import BasicAuthentication
 import os
 import shutil
 import threading
+from django.db.models import Max
 
 # from rest_framework.decorators import parser_classes
 # from rest_framework.parsers import FormParser
@@ -131,7 +132,17 @@ class WebAppView(APIView):
                 app.min_instances = new_app["min_instances"]
                 app.max_instances = new_app["max_instances"]
                 app.env_hostname = get_setting("env_hostname", "10.10.10.51")
-                app.env_port = 0
+
+                max_port = WebApp.objects.all().aggregate(Max('env_port'))["env_port__max"]
+                if max_port and max_port >= int(get_setting("min_app_port", "31300")):
+                    new_port = max_port + 1
+                    if new_port > int(get_setting("max_app_port", "31399")):
+                        msg = {"status": "error", "message": "Unavalible resource"}
+                        return JsonResponse(msg)
+                else:
+                    new_port = int(get_setting("min_app_port", "31300"))
+
+                app.env_port = new_port
                 app.env_db_hostname = new_app["env_db_hostname"]
                 app.env_db_port = new_app["env_db_port"]
                 app.env_db_name = new_app["env_db_name"]
@@ -329,11 +340,34 @@ class DatabaseView(APIView):
         try:
             database = DatabaseApp()
             database.host = get_setting("database_host", "10.10.10.51")
-            database.port = 1
+            max_port = DatabaseApp.objects.all().aggregate(Max('port'))["port__max"]
+            if max_port and max_port >= int(get_setting("min_database_port", "31200")):
+                new_port = max_port + 1
+                if new_port > int(get_setting("max_database_port", "31299")):
+                    msg = {"status": "error", "message": "Unavalible resource"}
+                    return JsonResponse(msg)
+            else:
+                new_port = int(get_setting("min_database_port", "31200"))
+            database.port = new_port
             database.user = request.user
             database.root_password = request.data["root_password"]
             database.save()
-            msg = {"status": "success", "message": "Add database success"}
+
+            marathon_client = get_marathon_client()
+            database_template = get_setting("database_template","")
+            database_json = database_template % {"username":request.user.username,
+                                                "database_id": database.id,
+                                                "service_port": database.port,
+                                                "root_password": database.root_password
+                                                }
+
+            try:
+                app_marathon = get_marathon_app(database_json)
+                marathon_client.create_app(app_marathon.id, app_marathon)
+                msg = {"status": "success", "message": "created and deploying database"}
+            except Exception as e:
+                msg = {"status": "error", "message": "Unknown error when deploying database app"}
+
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}
             traceback.print_exc()
