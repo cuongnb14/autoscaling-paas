@@ -9,7 +9,7 @@
             "image": "mysql:5.7",
             "network": "BRIDGE",
             "portMappings": [{
-                "containerPort": 80,
+                "containerPort": 3306,
                 "hostPort": 0,
                 "servicePort": %(service_port)d,
                 "protocol": "tcp"
@@ -24,7 +24,7 @@
         ]
     },
     "env": {
-        "MYSQL_ROOT_PASSWORD": "%(root_password)d"
+        "MYSQL_ROOT_PASSWORD": "%(root_password)s"
     },
     "constraints": [
         ["hostname", "CLUSTER", "10.10.10.51"],
