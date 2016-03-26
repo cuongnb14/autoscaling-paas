@@ -327,10 +327,34 @@ class DatabaseView(APIView):
 
     def post(self, request, database_id):
         try:
+            database = DatabaseApp()
+            database.host = get_setting("database_host", "10.10.10.51")
+            database.port = 1
+            database.user = request.user
+            database.root_password = request.data["root_password"]
+            database.save()
+            msg = {"status": "success", "message": "Add database success"}
+        except Exception as e:
+            msg = {"status": "error", "message": "Unknown error"}
+            traceback.print_exc()
+        return JsonResponse(msg)
+
+    def put(self, request, database_id):
+        try:
             database = request.user.databaseapp_set.get(id=database_id)
             database.root_password = request.data["new_password"]
             database.save()
             msg = {"status": "success", "message": "Change password success"}
+        except Exception as e:
+            msg = {"status": "error", "message": "Unknown error"}
+            traceback.print_exc()
+        return JsonResponse(msg)
+
+    def delete(self, request, database_id):
+        try:
+            database = request.user.databaseapp_set.get(id=database_id)
+            database.delete()
+            msg = {"status": "success", "message": "Delete database success"}
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}
             traceback.print_exc()

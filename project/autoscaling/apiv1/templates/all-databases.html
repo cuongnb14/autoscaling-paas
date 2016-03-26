@@ -19,7 +19,25 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">All Database</h3>
+              <h3 class="box-title" >All Database</h3>
+              <div class="pull-right" ng-controller="ModalController as mc">
+
+                    <button ng-click="mc.toggleModal()" class="btn btn-primary">New Database</button>
+
+                    <modal title="Database infomation" visible="mc.showModal">
+                      <form role="form" ng-submit="gds.addDatabase()">
+                        <div class="form-group">
+                          <label for="root_password">Password for user root</label>
+                          <input type="text" ng-model="gds.root_password" class="form-control" id="root_password" placeholder="Enter root password" />
+                        </div>
+                        <button type="submit" class="btn btn-success" ng-click="mc.showModal=false">Submit</button>
+                        <a class="btn btn-danger" ng-click="mc.showModal=false">Cancel</a>
+                      </form>
+                    </modal>
+
+
+                <a type="button" href="https://www.google.com/?gws_rd=ssl" target="_blank" class="btn btn-warning">PHPMyadmin</a>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -63,35 +81,7 @@
                       </modal>
                   </td>
 
-
-
-                  <!-- <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{database.id}}">
-                    <i class="fa fa-key"></i>
-                  </button></td>
-
-
-                  <div class="modal fade" id="modal-{{database.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel-{{database.id}}">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-title" id="myModalLabel-{{database.id}}">Change password</h4>
-                        </div>
-                        <div class="modal-body">
-                          <div class="form-group">
-                            <label for="new_pass">New password</label>
-                            <input required type="text" required class="form-control" id="new_pass" ng-model="database.new_password" placeholder="New password">
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          <button type="button" data-dismiss="modal" ng-click="gds.updatePassword(database.id, database.new_password)" class="btn btn-primary">Save changes</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div> -->
-
-                  <td><i ng-click="deleteDatabase(database)" class="fa fa-times btn btn-danger"></i></td>
+                  <td><i ng-click="gds.deleteDatabase(database.id)" class="fa fa-times btn btn-danger"></i></td>
                 </tr>
                 {% endverbatim %}
                 </tbody>

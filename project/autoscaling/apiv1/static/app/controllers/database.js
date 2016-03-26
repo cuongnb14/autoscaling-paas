@@ -2,12 +2,13 @@
 
 var modal = angular.module('ABModal');
 
-// mymodal.controller('ModalController', function ($scope) {
-//     $scope.showModal = false;
-//     // $scope.toggleModal = function(){
-//     //     $scope.showModal = !$scope.showModal;
-//     // };
-//   });
+modal.controller('ModalController', function ($scope) {
+    var mc = this;
+    mc.showModal = false;
+    mc.toggleModal = function(){
+        mc.showModal = !mc.showModal;
+    };
+  });
 
 modal.directive('modal', function () {
     return {
@@ -73,6 +74,26 @@ angular.module('Database')
           gds.showModal[database.id] = false;
 
           RESTfulService.updatePassword(database.id,gds.new_password[database.id], function(response) {
+              toastr[response.status](response.message)
+              if(response.status == "success") {
+                  gds.init();
+              }
+          });
+        };
+
+        gds.addDatabase = function (database) {
+
+          RESTfulService.addDatabase(gds.root_password, function(response) {
+              toastr[response.status](response.message)
+              if(response.status == "success") {
+                  gds.init();
+              }
+          });
+        };
+
+        gds.deleteDatabase = function (database_id) {
+
+          RESTfulService.deleteDatabase(database_id, function(response) {
               toastr[response.status](response.message)
               if(response.status == "success") {
                   gds.init();

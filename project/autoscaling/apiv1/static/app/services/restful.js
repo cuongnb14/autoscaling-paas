@@ -28,6 +28,22 @@ angular.module('RESTful')
                });
         };
 
+        service.addDatabase = function (root_password, callback) {
+            $http.post('http://localhost:8000/api/v1/databases', {
+                                                                  root_password: root_password
+                                                                })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
+        service.deleteDatabase = function (database_id, callback) {
+            $http.delete('http://localhost:8000/api/v1/databases/'+database_id)
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         service.addApp = function (app_name, github_url, min_instances, max_instances, env_db_hostname='', env_db_port=0,env_db_name='', env_db_username='', env_db_password='',  callback) {
             $http.post('http://localhost:8000/api/v1/apps', { name : app_name,
                                                               github_url : github_url,
@@ -68,7 +84,7 @@ angular.module('RESTful')
         };
 
         service.updatePassword = function (database_id, new_password, callback) {
-            $http.post('http://localhost:8000/api/v1/databases/'+database_id, {
+            $http.put('http://localhost:8000/api/v1/databases/'+database_id, {
                                                                                 new_password: new_password
                                                                               })
                .success(function (response) {
