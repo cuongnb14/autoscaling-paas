@@ -19,5 +19,8 @@
                 { "key": "volume", "value": "10.10.10.51/volume/admin/bot2:/var/www" }
             ]
         }
+    },
+    "labels": {
+        "HAPROXY_GROUP": "external"
     }
 }

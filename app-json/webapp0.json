@@ -16,7 +16,7 @@
             }],
             "parameters": [
                 { "key": "volume-driver", "value": "nfs" },
-                { "key": "volume", "value": "10.10.10.51/volume/%(username)s/%(app_name)s:/var/www" }
+                { "key": "volume", "value": "10.10.10.51/autoscaling/storage/application/%(username)s/%(app_name)s:/var/www" }
             ]
         }
     },
@@ -28,5 +28,8 @@
         "ENV_DB_NAME": "%(env_db_name)s",
         "ENV_DB_USERNAME": "%(env_db_username)s",
         "ENV_DB_PASSWORD": "%(env_db_password)s",
+    },
+    "labels": {
+        "HAPROXY_GROUP": "external"
     }
 }

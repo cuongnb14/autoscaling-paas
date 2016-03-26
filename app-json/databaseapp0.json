@@ -1,5 +1,5 @@
 {
-    "id": "admin.database.1",
+    "id": "%(username)s.database.%(database_id)d",
     "cpus": 0.5,
     "mem": 128,
     "instances": 1,
@@ -11,20 +11,20 @@
             "portMappings": [{
                 "containerPort": 80,
                 "hostPort": 0,
-                "servicePort": 31000,
+                "servicePort": %(service_port)d,
                 "protocol": "tcp"
             }]
         },
         "volumes": [
             {
                 "containerPath": "/var/lib/mysql",
-                "hostPath": "/autoscaling/storage/database/database-1",
+                "hostPath": "/autoscaling/storage/database/database-%(database_id)d",
                 "mode": "RW"
             }
         ]
     },
     "env": {
-        "MYSQL_ROOT_PASSWORD": "cadvisor"
+        "MYSQL_ROOT_PASSWORD": "%(root_password)d"
     },
     "constraints": [
         ["hostname", "CLUSTER", "10.10.10.51"],
