@@ -67,5 +67,14 @@ angular.module('RESTful')
                });
         };
 
+        service.updatePassword = function (database_id, new_password, callback) {
+            $http.post('http://localhost:8000/api/v1/databases/'+database_id, {
+                                                                                new_password: new_password
+                                                                              })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         return service;
     }]);

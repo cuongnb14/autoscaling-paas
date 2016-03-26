@@ -10,7 +10,7 @@ angular.module('Registration', ['Authentication']);
 angular.module('WebApp', ['RESTful']);
 
 angular.module('Database', ['RESTful']);
-
+angular.module('ABModal', []);
 angular.module('BasicHttpAuth', [
     'Authentication',
     'ngRoute',
@@ -18,6 +18,7 @@ angular.module('BasicHttpAuth', [
     'WebApp',
     'Database',
     'angular-loading-bar',
+    'ABModal',
 ])
 
 .run(['$rootScope', '$location', '$cookieStore', '$http',

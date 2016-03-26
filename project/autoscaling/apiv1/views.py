@@ -324,3 +324,14 @@ class DatabaseView(APIView):
         databases = request.user.databaseapp_set.all()
         serializer = DatabaseAppSerializer(databases, many=True)
         return Response(serializer.data)
+
+    def post(self, request, database_id):
+        try:
+            database = request.user.databaseapp_set.get(id=database_id)
+            database.root_password = request.data["new_password"]
+            database.save()
+            msg = {"status": "success", "message": "Change password success"}
+        except Exception as e:
+            msg = {"status": "error", "message": "Unknown error"}
+            traceback.print_exc()
+        return JsonResponse(msg)

@@ -14,7 +14,7 @@
 </section>
 
 <section class="content">
-  <div class="row" ng-controller="DatabaseController">
+  <div class="row" ng-controller="GetDatabasesController as gds">
 
         <div class="col-xs-12">
           <div class="box">
@@ -27,22 +27,71 @@
                 <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Type</th>
-                  <th>Host</th>
+                  <th class="col-sm-4">Host</th>
                   <th>Port</th>
-                  <th>Version</th>
-                  <th>Username</th>
+                  <th class="col-sm-3">Root password</th>
+                  <th class="col-sm-2">Change password</th>
+                  <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                   {% verbatim %}
-                <tr ng-repeat="database in databases">
+                <tr ng-repeat="database in gds.databases">
                   <td>{{database.id}}</td>
-                  <td>{{database.image.type_db}}</td>
                   <td>{{database.host}}</td>
                   <td>{{database.port}}</td>
-                  <td>{{database.image.version}}</td>
-                  <td>{{database.username}}</td>
+                  <td><div class="input-group" ng-init="database.pass='******'">
+                        <input ng-disabled="true" type="text" value="{{database.pass}}" id="password" class="form-control input-sm">
+                        <div ng-mousedown="database.pass=database.root_password" ng-mouseup="database.pass='******'" ng-mouseleave="database.pass='******'" class="input-group-addon btn-eye"><i class="fa fa-eye"></i></div>
+                      </div>
+                  </td>
+
+                  <td class="container">
+                      <button ng-click="gds.showModal[database.id] = !gds.showModal[database.id]" class="btn btn-success">
+                        <i class="fa fa-key"></i>
+                      </button>
+
+                      <modal title="Change password"  visible="gds.showModal[database.id]">
+                        <form role="form" ng-submit="gds.updatePassword(database)">
+                          <div class="form-group">
+                            <label for="new_password">New password</label>
+                            <input type="text" class="form-control" id="new_password" ng-model="gds.new_password[database.id]" placeholder="Enter new password" />
+                          </div>
+                          <button type="submit" ng-click="gds.showModal[database.id] = false" class="btn btn-success">Submit</button>
+                          <button ng-click="gds.showModal[database.id] = false" class="btn btn-danger">Cancel</button>
+                        </form>
+                      </modal>
+                  </td>
+
+
+
+                  <!-- <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{database.id}}">
+                    <i class="fa fa-key"></i>
+                  </button></td>
+
+
+                  <div class="modal fade" id="modal-{{database.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel-{{database.id}}">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel-{{database.id}}">Change password</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div class="form-group">
+                            <label for="new_pass">New password</label>
+                            <input required type="text" required class="form-control" id="new_pass" ng-model="database.new_password" placeholder="New password">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="button" data-dismiss="modal" ng-click="gds.updatePassword(database.id, database.new_password)" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <td><i ng-click="deleteDatabase(database)" class="fa fa-times btn btn-danger"></i></td>
                 </tr>
                 {% endverbatim %}
                 </tbody>
