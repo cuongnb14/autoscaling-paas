@@ -56,3 +56,6 @@ def get_marathon_app(app_json):
 def get_message_serializer(status, message):
     data = {"status": status, "message": message}
     return MessageSerializer(data=data)
+
+def get_db_app_marathon_name(database):
+    return "{}.database.{}".format(database.user.username,database.id)

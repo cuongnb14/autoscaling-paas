@@ -388,7 +388,13 @@ class DatabaseView(APIView):
     def delete(self, request, database_id):
         try:
             database = request.user.databaseapp_set.get(id=database_id)
+            try:
+                marathon_client = get_marathon_client()
+                marathon_client.delete_app(get_db_app_marathon_name(database),force=True)
+            except:
+                pass
             database.delete()
+
             msg = {"status": "success", "message": "Delete database success"}
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}
