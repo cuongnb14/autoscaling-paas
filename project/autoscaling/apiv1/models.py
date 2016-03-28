@@ -10,7 +10,7 @@ class WebApp(TimeStampedModel):
     min_instances = models.IntegerField()
     max_instances = models.IntegerField()
     status = models.CharField(max_length=30, default="cloning")
-    autoscaling = models.CharField(max_length=255, default='off')
+    autoscaling = models.BooleanField(default="0")
     env_hostname = models.CharField(max_length=45, default='10.10.10.51')
     env_port = models.IntegerField(default=0)
     env_db_hostname =  models.CharField(max_length=45, default='10.10.10.51')

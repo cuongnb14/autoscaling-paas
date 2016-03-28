@@ -76,6 +76,15 @@ angular.module('RESTful')
                });
         };
 
+        service.toggleAutoscaling = function (app_name,  callback) {
+            $http.put('http://localhost:8000/api/v1/apps/'+app_name, {
+                                                              action : "autoscaling"
+                                                              })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         service.deleteApp = function (app_name, callback) {
             $http.delete('http://localhost:8000/api/v1/apps/'+app_name)
                .success(function (response) {

@@ -42,7 +42,7 @@ class WebAppSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebApp
-        fields = ('name', 'github_url', 'min_instances', 'max_instances', 'env_hostname',"env_port","env_db_hostname","env_db_port","env_db_name","env_db_username","env_db_password","cpus","status","mem","instances")
+        fields = ('name', 'github_url', 'min_instances', 'max_instances', 'env_hostname',"env_port","env_db_hostname","env_db_port","env_db_name","env_db_username","env_db_password","cpus","status","mem","instances", "autoscaling")
 
 class DatabaseAppSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()

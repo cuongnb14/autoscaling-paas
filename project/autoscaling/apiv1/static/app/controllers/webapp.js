@@ -21,9 +21,17 @@ angular.module('WebApp')
         gas.deleteApp = function(app) {
             RESTfulService.deleteApp(app.name, function(response){
                 toastr[response.status](response.message)
-                $scope.init();
+                gas.init();
             });
         };
+
+        gas.toggleAutoscaling = function(app_name) {
+            RESTfulService.toggleAutoscaling(app_name, function(response){
+                toastr[response.status](response.message)
+                gas.init();
+            });
+        };
+
     }])
 
     .controller('GetAppController',

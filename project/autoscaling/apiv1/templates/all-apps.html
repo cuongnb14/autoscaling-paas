@@ -14,12 +14,12 @@
 </section>
 
 <section class="content">
-  <div class="row" ng-controller="GetAppController">
+  <div class="row" ng-controller="GetAppsController as gas">
 
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">All Database</h3>
+              <h3 class="box-title">All Application</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -32,19 +32,22 @@
                   <th>Max</th>
                   <th>Status</th>
                   <th>Instances</th>
+                  <th>Autoscaling</th>
                   <th>Start/Stop</th>
                   <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                   {% verbatim %}
-                  <tr ng-repeat="app in apps">
+                  <tr ng-repeat="app in gas.apps">
                     <td>{{app.name}}</td>
                     <td>{{app.github_url}}</td>
                     <td>{{app.min_instances}}</td>
                     <td>{{app.max_instances}}</td>
                     <td>{{app.status}}</td>
                     <td>{{app.instances}}</td>
+                    <td ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-info" ng-click="gas.toggleAutoscaling(app.name)"></i></td>
+                    <td ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-info" ng-click="gas.toggleAutoscaling(app.name)"></i></td>
                     <td><i ng-click="startApp(app)" class="fa fa-play btn btn-default"></i></td>
                     <td><i ng-click="deleteApp(app)" class="fa fa-times btn btn-danger"></i></td>
                   </tr>

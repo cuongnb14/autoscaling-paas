@@ -198,7 +198,15 @@ class WebAppView(APIView):
                     app.save()
                     data = {"status": "success", "message": "Update info {} success".format(app_name)}
                 elif action == "autoscaling":
-                    data = {"status": "success", "message": "autoscaling to {} success".format(request.data['value'])}
+                    app.autoscaling = not app.autoscaling
+                    data = {"status": "success", "message": "autoscaling toggle success"}
+                    # if app.autoscaling == 0:
+                    #     app.autoscaling = 1
+                    #     data = {"status": "success", "message": "autoscaling is on"}
+                    # else:
+                    #     app.autoscaling =0
+                    #     data = {"status": "success", "message": "autoscaling is off"}
+                    app.save()
                 elif action == "restart":
                     marathon_client.restart_app(app_name)
                     data = {"status": "success", "message": "restarting app {}".format(app_name)}
