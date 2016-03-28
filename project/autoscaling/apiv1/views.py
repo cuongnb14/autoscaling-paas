@@ -190,7 +190,7 @@ class WebAppView(APIView):
 
     def __cloning(self, app):
         try:
-            root_dir = "/home/bacuong/volume/"+app.user.username
+            root_dir = "/autoscaling/storage/application/"+app.user.username
             app_dir = "{}/{}".format(root_dir, app.name)
             if not os.path.isdir(root_dir):
                 os.makedirs(root_dir)

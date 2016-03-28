@@ -6,7 +6,7 @@
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "eboraas/apache",
+            "image": "cuongnb14/apache-php",
             "network": "BRIDGE",
             "portMappings": [{
                 "containerPort": 80,
@@ -16,7 +16,7 @@
             }],
             "parameters": [
                 { "key": "volume-driver", "value": "nfs" },
-                { "key": "volume", "value": "10.10.10.51/autoscaling/storage/application/%(username)s/%(app_name)s:/var/www" }
+                { "key": "volume", "value": "10.10.10.51/autoscaling/storage/application/%(username)s/%(app_name)s:/var/www/html" }
             ]
         }
     },
