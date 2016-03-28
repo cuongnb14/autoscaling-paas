@@ -2,34 +2,52 @@ from django.contrib.auth.models import User, Group
 from apiv1.models import *
 from rest_framework import serializers
 from apiv1.utils import *
-
+import traceback
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name',)
 
-class WebAppSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=256)
-    github_url = serializers.CharField(max_length=256)
-    min_instances = serializers.IntegerField()
-    max_instances = serializers.IntegerField()
-    env_hostname = serializers.CharField(max_length=45)
-    env_port = serializers.IntegerField()
-    env_db_hostname = serializers.CharField(max_length=45, allow_blank=True)
-    env_db_port = serializers.IntegerField()
-    env_db_name = serializers.CharField(max_length=45, allow_blank=True)
-    env_db_username = serializers.CharField(max_length=45, allow_blank=True)
-    env_db_password = serializers.CharField(max_length=45, allow_blank=True)
-    status = serializers.CharField(max_length=10)
-    cpus = serializers.FloatField(allow_null=True)
-    mem = serializers.FloatField(allow_null=True)
-    instances = serializers.IntegerField(allow_null=True)
+class WebAppSerializer(serializers.ModelSerializer):
+    # status = serializers.SerializerMethodField('get_status')
+    # defautl it is get_cpus method
+    cpus = serializers.SerializerMethodField()
+    mem = serializers.SerializerMethodField()
+    instances = serializers.SerializerMethodField()
+
+    def get_cpus(self, app):
+        try:
+            marathon_client = get_marathon_client()
+            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
+            return marathon_app.cpus
+        except Exception as e:
+            return None
+
+    def get_mem(self, app):
+        try:
+            marathon_client = get_marathon_client()
+            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
+            return marathon_app.mem
+        except Exception as e:
+            return None
+
+    def get_instances(self, app):
+        try:
+            marathon_client = get_marathon_client()
+            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
+            return marathon_app.instances
+        except Exception as e:
+            return 0
+
+    class Meta:
+        model = WebApp
+        fields = ('name', 'github_url', 'min_instances', 'max_instances', 'env_hostname',"env_port","env_db_hostname","env_db_port","env_db_name","env_db_username","env_db_password","cpus","status","mem","instances")
 
 class DatabaseAppSerializer(serializers.ModelSerializer):
-    status = serializers.SerializerMethodField('set_status')
+    status = serializers.SerializerMethodField()
 
-    def set_status(self, database_app):
+    def get_status(self, database_app):
         try:
             mc = get_marathon_client()
             mc.get_app("{}.database.{}".format(database_app.user.username,database_app.id))

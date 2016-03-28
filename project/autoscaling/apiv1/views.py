@@ -94,25 +94,20 @@ class WebAppView(APIView):
 
             if app_name:
                 app = request.user.webapp_set.get(name=app_name)
-                app = get_info_app(app, marathon_client)
-                serializer = WebAppSerializer(data=app)
+                serializer = WebAppSerializer(app)
             else:
                 apps = request.user.webapp_set.all()
-                data = []
-                for app in apps:
-                    app = get_info_app(app, marathon_client)
-                    data.append(app)
-                serializer = WebAppSerializer(data=data, many=True)
+                serializer = WebAppSerializer(apps, many=True)
         except WebApp.DoesNotExist as e:
-            data = {"status": "error", "message": "app {} does not exist".format(app_name)}
-            serializer = MessageSerializer(data=data)
+            traceback.print_exc()
+            msg = {"status": "error", "message": "app {} does not exist".format(app_name)}
+            return JsonResponse(msg)
         except Exception as e:
-            data = {"status": "error", "message": str(e)}
-            serializer = MessageSerializer(data=data)
+            traceback.print_exc()
+            msg = {"status": "error", "message": str(e)}
+            return JsonResponse(msg)
 
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object! "+str(serializer.errors)})
+        return Response(serializer.data)
 
     def post(self, request, app_name):
         """Create new application"""
