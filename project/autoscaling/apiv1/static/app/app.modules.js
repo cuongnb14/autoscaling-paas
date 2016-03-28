@@ -1,16 +1,20 @@
 'use strict';
 
 // declare modules
-angular.module('Authentication', []);
-angular.module('RESTful', []);
-angular.module('Login', ['Authentication']);
+angular.module("Config", []).constant("appConfig", {
+        "host": "localhost",
+        "port": "8000"
+    })
+angular.module('Authentication', ['Config']);
+angular.module('RESTful', ['Config']);
+angular.module('Login', ['Authentication','Config']);
 
-angular.module('Registration', ['Authentication']);
+angular.module('Registration', ['Authentication','Config']);
 
-angular.module('WebApp', ['RESTful']);
+angular.module('WebApp', ['RESTful','Config']);
 
-angular.module('Database', ['RESTful']);
-angular.module('ABModal', []);
+angular.module('Database', ['RESTful','Config']);
+angular.module('ABModal', ['Config']);
 angular.module('BasicHttpAuth', [
     'Authentication',
     'ngRoute',
@@ -19,10 +23,11 @@ angular.module('BasicHttpAuth', [
     'Database',
     'angular-loading-bar',
     'ABModal',
+    'Config',
 ])
 
-.run(['$rootScope', '$location', '$cookieStore', '$http',
-    function ($rootScope, $location, $cookieStore, $http) {
+.run(['$rootScope', '$location', '$cookieStore', '$http', 'appConfig',
+    function ($rootScope, $location, $cookieStore, $http, appConfig) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.user) {
@@ -31,8 +36,8 @@ angular.module('BasicHttpAuth', [
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
             // redirect to login page if not logged in
-            if (!$rootScope.globals.user && (window.location.href !== 'http://localhost:8000/ui/login' && window.location.href !== 'http://localhost:8000/ui/registration')) {
-                window.location.href = 'http://localhost:8000/ui/login';
+            if (!$rootScope.globals.user && (window.location.href !== 'http://'+appConfig.host+':'+appConfig.port+'/ui/login' && window.location.href !== 'http://'+appConfig.host+':'+appConfig.port+'/ui/registration')) {
+                window.location.href = 'http://'+appConfig.host+':'+appConfig.port+'/ui/login';
             }
         });
     }]);

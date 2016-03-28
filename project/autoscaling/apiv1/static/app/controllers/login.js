@@ -3,8 +3,8 @@
 angular.module('Authentication')
 
 .controller('LoginController',
-    ['$scope', '$rootScope', '$location', 'AuthenticationService',
-    function ($scope, $rootScope, $location, AuthenticationService) {
+    ['$scope', '$rootScope', '$location', 'AuthenticationService', 'appConfig',
+    function ($scope, $rootScope, $location, AuthenticationService, appConfig) {
         // reset login status
         AuthenticationService.ClearCredentials();
 
@@ -13,7 +13,7 @@ angular.module('Authentication')
             AuthenticationService.Login($scope.username, $scope.password, function(response) {
                 if(response.status == "success") {
                     AuthenticationService.SetCredentials(response.user, $scope.password);
-                    window.location.href = 'http://localhost:8000/ui/dashboard';
+                    window.location.href = 'http://'+appConfig.host+':'+appConfig.port+'/ui/dashboard';
                 } else {
                     $scope.error = response.message;
                     $scope.dataLoading = false;

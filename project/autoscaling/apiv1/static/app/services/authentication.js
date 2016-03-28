@@ -3,12 +3,12 @@
 angular.module('Authentication')
 
 .factory('AuthenticationService',
-    ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout',
-    function (Base64, $http, $cookieStore, $rootScope, $timeout) {
+    ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout', 'appConfig',
+    function (Base64, $http, $cookieStore, $rootScope, $timeout, appConfig) {
         var service = {};
 
         service.Login = function (username, password, callback) {
-            $http.post('http://localhost:8000/api/v1/login', { username: username, password: password })
+            $http.post('http://'+appConfig.host+':'+appConfig.port+'/api/v1/login', { username: username, password: password })
                .success(function (response) {
                   callback(response);
                });
@@ -16,7 +16,7 @@ angular.module('Authentication')
         };
 
         service.Register = function (username, password, email, first_name, last_name, callback) {
-            $http.post('http://localhost:8000/api/v1/registration', { username: username, password: password, email: email, first_name: first_name, last_name: last_name })
+            $http.post('http://'+appConfig.host+':'+appConfig.port+'/api/v1/registration', { username: username, password: password, email: email, first_name: first_name, last_name: last_name })
                .success(function (response) {
                   callback(response);
                });
