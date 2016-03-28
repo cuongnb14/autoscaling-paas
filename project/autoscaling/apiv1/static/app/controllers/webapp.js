@@ -69,8 +69,6 @@ angular.module('WebApp')
 .controller('SetAppController',
     ['RESTfulService',
     function (RESTfulService) {
-      $rootScope.globals = $cookieStore.get('globals') || {};
-      if ($rootScope.globals.user) {
           $scope.addApp = function() {
               RESTfulService.addApp($scope.app_name,
                                     $scope.github_url,
@@ -85,6 +83,4 @@ angular.module('WebApp')
                   toastr[response.status](response.message);
               });
           };
-
-      }
     }]);
