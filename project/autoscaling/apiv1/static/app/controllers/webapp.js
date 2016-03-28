@@ -18,15 +18,22 @@ angular.module('WebApp')
         };
         gas.init();
 
-        gas.deleteApp = function(app) {
-            RESTfulService.deleteApp(app.name, function(response){
+        gas.deleteApp = function(app_name) {
+            RESTfulService.deleteApp(app_name, function(response){
                 toastr[response.status](response.message)
                 gas.init();
             });
         };
 
-        gas.toggleAutoscaling = function(app_name) {
-            RESTfulService.toggleAutoscaling(app_name, function(response){
+        gas.putApp = function(app_name, action) {
+            RESTfulService.putApp(app_name, action, function(response){
+                toastr[response.status](response.message)
+                gas.init();
+            });
+        };
+
+        gas.scaleApp = function(app_name) {
+            RESTfulService.scaleApp(app_name, gas.instances[app_name], function(response){
                 toastr[response.status](response.message)
                 gas.init();
             });

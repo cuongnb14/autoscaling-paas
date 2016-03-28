@@ -31,9 +31,12 @@
                   <th>Min</th>
                   <th>Max</th>
                   <th>Status</th>
-                  <th>Instances</th>
+                  <th title="instances">Ins</th>
+                  <th title="deploy/redeploy">Deploy</th>
                   <th>Autoscaling</th>
                   <th>Start/Stop</th>
+                  <th class="col-sm-1">Scale</th>
+                  <th class="col-sm-1">Edit</th>
                   <th>Delete</th>
                 </tr>
                 </thead>
@@ -46,10 +49,33 @@
                     <td>{{app.max_instances}}</td>
                     <td>{{app.status}}</td>
                     <td>{{app.instances}}</td>
-                    <td ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-info" ng-click="gas.toggleAutoscaling(app.name)"></i></td>
-                    <td ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-info" ng-click="gas.toggleAutoscaling(app.name)"></i></td>
-                    <td><i ng-click="startApp(app)" class="fa fa-play btn btn-default"></i></td>
-                    <td><i ng-click="deleteApp(app)" class="fa fa-times btn btn-danger"></i></td>
+                    <td><i ng-click="gas.putApp(app.name, 'deploy')" class="fa fa-cogs btn btn-primary"></i></td>
+                    <td ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
+                    <td ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
+
+                    <td ng-show="app.instances==0"><i ng-click="gas.putApp(app.name, 'start')" class="fa fa-play btn btn-primary"></i></td>
+                    <td ng-show="app.instances>0"><i ng-click="gas.putApp(app.name, 'stop')" class="fa fa-stop btn btn-primary"></i></td>
+
+                    <td class="container">
+                        <button ng-disabled="app.autoscaling" ng-click="gas.showModal[app.name] = !gas.showModal[app.name]" class="btn btn-primary btn-sm">
+                          <i class="fa fa-arrows-h"></i>
+                        </button>
+
+                        <modal title="Scale application {{app.name}}"  visible="gas.showModal[app.name]">
+                          <form role="form" ng-submit="gas.scaleApp(app.name)">
+                            <div class="form-group">
+                              <label for="instances">Instances</label>
+                              <input type="number" class="form-control" id="instances" ng-model="gas.instances[app.name]" placeholder="Enter new instances of application" ng-value="app.instances"/>
+                            </div>
+                            <button type="submit" ng-click="gas.showModal[app.name] = false" class="btn btn-success">Submit</button>
+                            <button ng-click="gas.showModal[app.name] = false" class="btn btn-danger">Cancel</button>
+                          </form>
+                        </modal>
+                    </td>
+                    {% endverbatim %}
+                    <td><a href="{% url "static_view" "edit-app"%}{% verbatim %}#?name={{app.name}}" ><i class="fa fa-pencil btn btn-primary"></i></a></td>
+
+                    <td><i ng-click="gas.deleteApp(app.name)" class="fa fa-times btn btn-danger"></i></td>
                   </tr>
                 {% endverbatim %}
                 </tbody>

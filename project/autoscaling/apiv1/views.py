@@ -160,6 +160,34 @@ class WebAppView(APIView):
             return Response(serializer.data)
         return JsonResponse({"status": "error", "message": "Unserialize object!"})
 
+    def __deploy_app(self, app):
+        marathon_client = get_marathon_client()
+        app_template = get_setting("app_template")
+        app_json = app_template % {"username": app_name.user.username,
+                                    "app_name": app_name,
+                                    "service_port": app.env_port,
+                                    "env_port": app.env_port,
+                                    "env_hostname": app.env_hostname,
+                                    "env_db_hostname": app.env_db_hostname,
+                                    "env_db_port": app.env_db_port,
+                                    "env_db_name": app.env_db_name,
+                                    "env_db_username": app.env_db_username,
+                                    "env_db_password": app.env_db_password}
+
+        try:
+            try:
+                marathon_client.delete_app("{}.{}".format(app.user.username, app.name), force=True )
+            except Exception as e:
+                pass
+            app_marathon = get_marathon_app(app_json)
+            marathon_client.create_app(app_marathon.id, app_marathon)
+            app.status = "deploying"
+            msg = {"status": "success", "message": "deploying app {}".format(app_name)}
+        except Exception as e:
+            msg = {"status": "error", "message": "Unknown error"}
+        return msg
+
+
     def __cloning(self, app):
         try:
             root_dir = "/home/bacuong/volume/"+app.user.username
@@ -172,6 +200,7 @@ class WebAppView(APIView):
 
             os.system("git clone {} {}".format(app.github_url, app_dir))
             app.status = "cloned"
+            self.__deploy_app(app)
         except Exception as e:
             app.status = "clone failed: "+str(e)
 
@@ -200,12 +229,6 @@ class WebAppView(APIView):
                 elif action == "autoscaling":
                     app.autoscaling = not app.autoscaling
                     data = {"status": "success", "message": "autoscaling toggle success"}
-                    # if app.autoscaling == 0:
-                    #     app.autoscaling = 1
-                    #     data = {"status": "success", "message": "autoscaling is on"}
-                    # else:
-                    #     app.autoscaling =0
-                    #     data = {"status": "success", "message": "autoscaling is off"}
                     app.save()
                 elif action == "restart":
                     marathon_client.restart_app(app_name)
@@ -221,21 +244,9 @@ class WebAppView(APIView):
                     if instances > app.max_instances or instances < app.min_instances:
                         data = {"status": "error", "message": "number instances must in [{},{}]".format(app.min_instances, app.max_instances)}
                     else:
-                        marathon_client.scale_app(app_name, instances)
-                        data = {"status": "success", "message": "scaling app {}".format(app_name)}
+                        marathon_client.scale_app("{}.{}".format(app.user.username, app.name), instances)
+                        data = {"status": "success", "message": "scaling app {} to {}".format(app_name, instances)}
                 elif action == "deploy":
-                    app_template = get_setting("app_template")
-                    app_json = app_template % {"username":request.user.username,
-                                                "app_name": app_name,
-                                                "service_port": app.env_port,
-                                                "env_port": app.env_port,
-                                                "env_hostname": app.env_hostname,
-                                                "env_db_hostname": app.env_db_hostname,
-                                                "env_db_port": app.env_db_port,
-                                                "env_db_name": app.env_db_name,
-                                                "env_db_username": app.env_db_username,
-                                                "env_db_password": app.env_db_password}
-
                     try:
                         app_marathon = get_marathon_app(app_json)
                         marathon_client.create_app(app_marathon.id, app_marathon)
@@ -258,11 +269,11 @@ class WebAppView(APIView):
             if app is None or app.user.id is not request.user.id:
                 data = {"status": "error", "message": "app {} does not exist".format(app_name)}
             else:
-                app.delete()
                 try:
-                    marathon_client.delete_app(app_name,force=True)
+                    marathon_client.delete_app("{}.{}".format(app.user.username, app.name),force=True)
                 except:
                     pass
+                app.delete()
                 data = {"status": "success", "message": "delete app {} success".format(app_name)}
         except WebApp.DoesNotExist as e:
             data = {"status": "error", "message": "app {} does not exist".format(app_name)}
