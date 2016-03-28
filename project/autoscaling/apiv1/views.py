@@ -142,7 +142,7 @@ class WebAppView(APIView):
                 app.env_db_port = new_app["env_db_port"]
                 app.env_db_name = new_app["env_db_name"]
                 app.env_db_username = new_app["env_db_username"]
-                app.env_db_username = new_app["env_db_password"]
+                app.env_db_password = new_app["env_db_password"]
 
                 app.user = request.user
                 app.status = "cloning"
@@ -163,8 +163,8 @@ class WebAppView(APIView):
     def __deploy_app(self, app):
         marathon_client = get_marathon_client()
         app_template = get_setting("app_template")
-        app_json = app_template % {"username": app_name.user.username,
-                                    "app_name": app_name,
+        app_json = app_template % {"username": app.user.username,
+                                    "app_name": app.name,
                                     "service_port": app.env_port,
                                     "env_port": app.env_port,
                                     "env_hostname": app.env_hostname,
@@ -182,7 +182,7 @@ class WebAppView(APIView):
             app_marathon = get_marathon_app(app_json)
             marathon_client.create_app(app_marathon.id, app_marathon)
             app.status = "deploying"
-            msg = {"status": "success", "message": "deploying app {}".format(app_name)}
+            msg = {"status": "success", "message": "deploying app {}".format(app.name)}
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}
         return msg
@@ -202,7 +202,7 @@ class WebAppView(APIView):
             app.status = "cloned"
             self.__deploy_app(app)
         except Exception as e:
-            app.status = "clone failed: "+str(e)
+            app.status = "clone failed:"
 
         app.save()
 
@@ -248,9 +248,7 @@ class WebAppView(APIView):
                         data = {"status": "success", "message": "scaling app {} to {}".format(app_name, instances)}
                 elif action == "deploy":
                     try:
-                        app_marathon = get_marathon_app(app_json)
-                        marathon_client.create_app(app_marathon.id, app_marathon)
-                        data = {"status": "success", "message": "deploying app {}".format(app_name)}
+                        data = self.__deploy_app(app)
                     except Exception as e:
                         data = {"status": "error", "message": "Unknown error"}
                 else:

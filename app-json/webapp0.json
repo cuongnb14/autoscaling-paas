@@ -27,7 +27,7 @@
         "ENV_DB_PORT": "%(env_db_port)s",
         "ENV_DB_NAME": "%(env_db_name)s",
         "ENV_DB_USERNAME": "%(env_db_username)s",
-        "ENV_DB_PASSWORD": "%(env_db_password)s",
+        "ENV_DB_PASSWORD": "%(env_db_password)s"
     },
     "labels": {
         "HAPROXY_GROUP": "external"
