@@ -5,14 +5,14 @@ var modal = angular.module('ABModal');
 modal.controller('ModalController', function ($scope) {
     var mc = this;
     mc.showModal = false;
-    mc.toggleModal = function(){
-        mc.showModal = !mc.showModal;
+    mc.showModal = function(name){
+        $('#'+name).modal('show')
     };
   });
 
 modal.directive('modal', function () {
     return {
-      template: '<div class="modal fade">' +
+      template: '<div class="modal fade" tabindex="-1" role="dialog">' +
           '<div class="modal-dialog">' +
             '<div class="modal-content">' +
               '<div class="modal-header">' +
@@ -29,25 +29,6 @@ modal.directive('modal', function () {
       scope:true,
       link: function postLink(scope, element, attrs) {
         scope.title = attrs.title;
-
-        scope.$watch(attrs.visible, function(value){
-          if(value == true)
-            $(element).modal('show');
-          else
-            $(element).modal('hide');
-        });
-
-        $(element).on('shown.bs.modal', function(){
-          scope.$apply(function(){
-            scope.$parent[attrs.visible] = true;
-          });
-        });
-
-        $(element).on('hidden.bs.modal', function(){
-          scope.$apply(function(){
-            scope.$parent[attrs.visible] = false;
-          });
-        });
       }
     };
   });
@@ -71,8 +52,6 @@ angular.module('Database')
         }
 
         gds.updatePassword = function (database) {
-          gds.showModal[database.id] = false;
-
           RESTfulService.updatePassword(database.id,gds.new_password[database.id], function(response) {
               toastr[response.status](response.message)
               if(response.status == "success") {

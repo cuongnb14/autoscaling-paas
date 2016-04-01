@@ -22,18 +22,17 @@
               <h3 class="box-title" >All Database</h3>
               <div class="pull-right" ng-controller="ModalController as mc">
 
-                    <button ng-click="mc.toggleModal()" class="btn btn-primary">New Database</button>
+                  <button ng-click="mc.showModal('myModal')" class="btn btn-primary">New Database</button>
 
-                    <modal title="Database infomation" visible="mc.showModal">
-                      <form role="form" ng-submit="gds.addDatabase()">
-                        <div class="form-group">
-                          <label for="root_password">Password for user root</label>
-                          <input type="text" ng-model="gds.root_password" class="form-control" id="root_password" placeholder="Enter root password" />
-                        </div>
-                        <button type="submit" class="btn btn-success" ng-click="mc.showModal=false">Submit</button>
-                        <a class="btn btn-danger" ng-click="mc.showModal=false">Cancel</a>
-                      </form>
-                    </modal>
+                  <modal id="myModal" title="Database infomation">
+                    <form role="form" ng-submit="gds.addDatabase()">
+                      <div class="form-group">
+                        <label for="root_password">Password for user root</label>
+                        <input type="text" ng-model="gds.root_password" class="form-control" id="root_password" placeholder="Enter root password" />
+                      </div>
+                      <button type="submit" class="btn btn-success" ng-click="mc.showModal=false">Submit</button>
+                    </form>
+                  </modal>
 
 
                 <a type="button" href="http://10.10.10.51:31004/" target="_blank" class="btn btn-warning">PHPMyadmin</a>
@@ -66,19 +65,18 @@
                       </div>
                   </td>
 
-                  <td class="container">
-                      <button ng-click="gds.showModal[database.id] = !gds.showModal[database.id]" class="btn btn-success">
+                  <td ng-controller="ModalController as mc">
+                      <button ng-click="mc.showModal('md-'+database.id)" class="btn btn-success btn-sm">
                         <i class="fa fa-key"></i>
                       </button>
 
-                      <modal title="Change password"  visible="gds.showModal[database.id]">
-                        <form role="form" ng-submit="gds.updatePassword(database)">
+                      <modal id="md-{{database.id}}" title="Change password">
+                        <form role="form">
                           <div class="form-group">
                             <label for="new_password">New password</label>
                             <input type="text" class="form-control" id="new_password" ng-model="gds.new_password[database.id]" placeholder="Enter new password" />
                           </div>
-                          <button type="submit" ng-click="gds.showModal[database.id] = false" class="btn btn-success">Submit</button>
-                          <button ng-click="gds.showModal[database.id] = false" class="btn btn-danger">Cancel</button>
+                          <button type="submit" ng-click="gds.updatePassword(database)" class="btn btn-success" data-dismiss="modal">Submit</button>
                         </form>
                       </modal>
                   </td>
