@@ -25,12 +25,12 @@
                   <button ng-click="mc.showModal('myModal')" class="btn btn-primary">New Database</button>
 
                   <modal id="myModal" title="Database infomation">
-                    <form role="form" ng-submit="gds.addDatabase()">
+                    <form role="form">
                       <div class="form-group">
                         <label for="root_password">Password for user root</label>
                         <input type="text" ng-model="gds.root_password" class="form-control" id="root_password" placeholder="Enter root password" />
                       </div>
-                      <button type="submit" class="btn btn-success" ng-click="mc.showModal=false">Submit</button>
+                      <button type="submit" class="btn btn-success" data-dismiss="modal" ng-click="gds.addDatabase()">Submit</button>
                     </form>
                   </modal>
 
