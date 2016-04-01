@@ -28,8 +28,6 @@
                 <tr>
                   <th>Name</th>
                   <th>Github url</th>
-                  <th>Min</th>
-                  <th>Max</th>
                   <th>Status</th>
                   <th title="instances">Ins</th>
                   <th title="deploy/redeploy">Deploy</th>
@@ -37,6 +35,7 @@
                   <th>Start/Stop</th>
                   <th class="col-sm-1">Scale</th>
                   <th class="col-sm-1">Edit</th>
+                  <th class="col-sm-1">Info</th>
                   <th>Delete</th>
                 </tr>
                 </thead>
@@ -45,8 +44,6 @@
                   <tr ng-repeat="app in gas.apps">
                     <td>{{app.name}}</td>
                     <td>{{app.github_url}}</td>
-                    <td>{{app.min_instances}}</td>
-                    <td>{{app.max_instances}}</td>
                     <td>{{app.status}}</td>
                     <td>{{app.instances}}</td>
                     <td><i ng-click="gas.putApp(app.name, 'deploy')" class="fa fa-cogs btn btn-primary"></i></td>
@@ -55,24 +52,93 @@
                     <td ng-show="app.instances==0"><i ng-click="gas.putApp(app.name, 'start')" class="fa fa-play btn btn-primary"></i></td>
                     <td ng-show="app.instances>0"><i ng-click="gas.putApp(app.name, 'stop')" class="fa fa-stop btn btn-primary"></i></td>
 
-                    <td class="container">
-                        <button ng-disabled="app.autoscaling" ng-click="gas.showModal[app.name] = !gas.showModal[app.name]" class="btn btn-primary btn-sm">
+                    <td class="container" ng-controller="ModalController as mc">
+                        <button ng-disabled="app.autoscaling" ng-click="mc.showModal('mds-'+app.name)" class="btn btn-primary btn-sm">
                           <i class="fa fa-arrows-h"></i>
                         </button>
 
-                        <modal title="Scale application {{app.name}}"  visible="gas.showModal[app.name]">
-                          <form role="form" ng-submit="gas.scaleApp(app.name)">
+                        <modal id="mds-{{app.name}}" title="Scale application {{app.name}}"  visible="gas.showModal[app.name]">
+                          <form role="form">
                             <div class="form-group">
                               <label for="instances">Instances</label>
                               <input type="number" class="form-control" id="instances" ng-model="gas.instances[app.name]" placeholder="Enter new instances of application" ng-value="app.instances"/>
                             </div>
-                            <button type="submit" ng-click="gas.showModal[app.name] = false" class="btn btn-success">Submit</button>
-                            <button ng-click="gas.showModal[app.name] = false" class="btn btn-danger">Cancel</button>
+                            <button ng-click="gas.scaleApp(app.name)" data-dismiss="modal" class="btn btn-success">Submit</button>
                           </form>
                         </modal>
                     </td>
                     {% endverbatim %}
                     <td><a href="{% url "static_view" "edit-app"%}{% verbatim %}#?name={{app.name}}" ><i class="fa fa-pencil btn btn-primary"></i></a></td>
+
+                    <td ng-controller="ModalController as mc">
+                        <button ng-click="mc.showModal('mdi-'+app.name)" class="btn btn-info btn-sm">
+                          <i class="fa fa-info"></i>
+                        </button>
+
+                        <modal id="mdi-{{app.name}}" title="App infomations">
+                          <div>
+                            <h4>Basic</h4>
+                            <div class="row">
+                                <p class="text-muted col-md-2">Name: </p>
+                                <p class="text-primary col-md-10">{{app.name}}</p>
+                            </div>
+                            <div class="row">
+                                <p class="text-muted col-md-2">Github url: </p>
+                                <p class="text-primary col-md-10">{{app.github_url}}</p>
+                            </div>
+                            <div class="row">
+                                <p class="text-muted col-md-3">Min instances: </p>
+                                <p class="text-primary col-md-3">{{app.min_instances}}</p>
+                                <p class="text-muted col-md-3">Max instances: </p>
+                                <p class="text-primary col-md-3">{{app.max_instances}}</p>
+                            </div>
+                            <h4>Enviroment</h4>
+                            <div class="row">
+                                <p class="text-muted col-md-3">HOSTNAME: </p>
+                                <p class="text-primary col-md-3">{{app.env_hostname}}</p>
+                                <p class="text-muted col-md-3">PORT: </p>
+                                <p class="text-primary col-md-3">{{app.env_port}}</p>
+                            </div>
+                            <div class="row">
+                                <p class="text-muted col-md-3">HOSTNAME DATABASE: </p>
+                                <p class="text-primary col-md-3">{{app.env_db_hostname}}</p>
+                                <p class="text-muted col-md-3">PORT DATABASE: </p>
+                                <p class="text-primary col-md-3">{{app.env_db_port}}</p>
+                            </div>
+                            <div class="row">
+                                <p class="text-muted col-md-3">USERNAME: </p>
+                                <p class="text-primary col-md-3">{{app.env_db_username}}</p>
+                                <p class="text-muted col-md-3">PASSWORD: </p>
+                                <p class="text-primary col-md-3">{{app.env_db_password}}</p>
+                            </div>
+                            <div class="row">
+                              <p class="text-muted col-md-3">NAME DATABASE: </p>
+                              <p class="text-primary col-md-9">{{app.env_db_name}}</p>
+                            </div>
+                            <h4>Deploy</h4>
+                            <div class="row">
+                              <p class="text-muted col-md-3">Status: </p>
+                              <p class="text-primary col-md-9">{{app.status}}</p>
+                            </div>
+                            <div class="row">
+                              <p class="text-muted col-md-3">cpus: </p>
+                              <p class="text-primary col-md-3">{{app.cpus}}</p>
+                              <p class="text-muted col-md-3">mem: </p>
+                              <p class="text-primary col-md-3">{{app.mem}}</p>
+                            </div>
+                            <div class="row">
+                              <p class="text-muted col-md-3">Instances: </p>
+                              <p class="text-primary col-md-9">{{app.instances}}</p>
+                            </div>
+                            <div class="row">
+                              <p class="text-muted col-md-3">Autoscaling: </p>
+                              <p class="text-primary col-md-9">{{app.autoscaling}}</p>
+                            </div>
+                          </div>
+
+
+                        </modal>
+                    </td>
 
                     <td><i ng-click="gas.deleteApp(app.name)" class="fa fa-times btn btn-danger"></i></td>
                   </tr>
