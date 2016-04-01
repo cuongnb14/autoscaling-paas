@@ -17,11 +17,14 @@
 <section class="content" ng-controller="GetAppController as ga">
   <div class="row">
     <div class="col-md-12">
-
-
-    <div class="box box-primary">
+    <div class="box box-primary collapsed-box">
         <div class="box-header with-border">
           <h3 class="box-title">Application infomations</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
         </div>
         <!-- /.box-header -->
         <!-- form start -->
@@ -79,12 +82,186 @@
           <!-- /.box-body -->
 
           <div class="box-footer">
-            <button class="submit btn" type="submit" ng-disabled="form.$invalid" >Update</button>
+            <button class="submit btn btn-primary" type="submit" ng-disabled="form.$invalid" >Update</button>
           </div>
         </form>
       </div>
 
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Rule for autoscaling</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" ng-controller="ModalController as mc">
+
+            <table class="table table-bordered table-hover table-striped ">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Metric</th>
+                <th>Upper threshold</th>
+                <th>Lower threshold</th>
+                <th>Instances out</th>
+                <th>Instances in</th>
+                <th>Scale up wait</th>
+                <th>Scale down wait</th>
+                <th>Disabled</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+              </thead>
+              <tbody>
+                {% verbatim %}
+                <tr ng-repeat="policy in ga.policies">
+                  <td>{{policy.id}}</td>
+                  <td>{{policy.metric_type}}</td>
+                  <td>{{policy.upper_threshold}}</td>
+                  <td>{{policy.lower_threshold}}</td>
+                  <td>{{policy.instances_out}}</td>
+                  <td>{{policy.instances_in}}</td>
+                  <td>{{policy.scale_up_wait}}</td>
+                  <td>{{policy.scale_down_wait}}</td>
+                  <td ng-show="policy.disabled==1"><i class="fa fa-check btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 0)"></i></td>
+                  <td ng-show="policy.disabled==0"><i class="fa fa-ban btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 1)"></i></td>
+                  <td><button class="btn btn-info btn-sm" ng-click="mc.showModal('md-'+policy.id)"><i class="fa fa-pencil "></i></button>
+                      <modal id="md-{{policy.id}}" title="Edit policy">
+                        <form role="form">
+                          <div class="row">
+                            <div class="form-group col-md-4">
+                              <h5>Metric</h5>
+                              <select ng-model="policy.metric_type" class="form-control">
+                                <option value="">---Metric type---</option>
+                                <option selected value="cpu">Cpu</option>
+                                <option value="mem">Mem</option>
+                              </select>
+                            </div>
+                          </div>
+
+
+                          <div class="form-group">
+                            <h5 >Target</h5>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input ng-model="policy.lower_threshold" type="number" class="form-control col-md-4" value="" placeholder="Lower thershold">
+                              </div>
+                              <div class="col-md-4">
+                                  <input ng-model="policy.upper_threshold" type="number" class="form-control col-md-4" value="" placeholder="Upper thershold">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <h5 >Instances</h5>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input ng-model="policy.instances_out" type="number" class="form-control col-md-4" value="" placeholder="Instances out">
+                              </div>
+                              <div class="col-md-4">
+                                  <input ng-model="policy.instances_in" type="number" class="form-control col-md-4" value="" placeholder="Instances in">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <h5 >Time wait (second)</h5>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input ng-model="policy.scale_down_wait" type="number" class="form-control col-md-4" value="" placeholder="Scale down wait">
+                              </div>
+                              <div class="col-md-4">
+                                  <input ng-model="policy.scale_up_wait" type="number" class="form-control col-md-4" value="" placeholder="Scale up wait">
+                              </div>
+                            </div>
+                          </div>
+
+
+                            <button type="submit" class="btn btn-success" data-dismiss="modal" ng-click="ga.updatePolicy(policy)">Submit</button>
+
+                        </form>
+                      </modal>
+                  </td>
+                  <td><button ng-click="ga.deletePolicy(policy.id)" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+            <hr >
+            <button ng-click="mc.showModal('add-policy')" class="col-md-1 btn btn-sm btn-primary" >Add Policy</button>
+
+            <modal id="add-policy" title="Policy">
+              <form role="form">
+                <div class="row">
+                  <div class="form-group col-md-4">
+                    <h5>Metric</h5>
+                    <select ng-model="np.metric_type" class="form-control">
+                      <option value="">---Metric type---</option>
+                      <option selected value="cpu">Cpu</option>
+                      <option value="mem">Mem</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <h5 >Target</h5>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input ng-model="np.lower_threshold" type="number" class="form-control col-md-4" value="" placeholder="Lower thershold">
+                    </div>
+                    <div class="col-md-4">
+                        <input ng-model="np.upper_threshold" type="number" class="form-control col-md-4" value="" placeholder="Upper thershold">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <h5 >Instances</h5>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input ng-model="np.instances_out" type="number" class="form-control col-md-4" value="" placeholder="Instances out">
+                    </div>
+                    <div class="col-md-4">
+                        <input ng-model="np.instances_in" type="number" class="form-control col-md-4" value="" placeholder="Instances in">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <h5 >Time wait (second)</h5>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input ng-model="np.scale_down_wait" type="number" class="form-control col-md-4" value="" placeholder="Scale down wait">
+                    </div>
+                    <div class="col-md-4">
+                        <input ng-model="np.scale_up_wait" type="number" class="form-control col-md-4" value="" placeholder="Scale in wait">
+                    </div>
+                  </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-success" data-dismiss="modal" ng-click="ga.addPolicy(np)">Submit</button>
+
+              </form>
+            </modal>
+
+
+          {% endverbatim %}
+        </div>
+        <!-- ./box-body -->
+      </div>
+
+    </div>
+  </div>
 </section>
+
 {% endblock content%}

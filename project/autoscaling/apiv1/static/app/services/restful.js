@@ -21,6 +21,59 @@ angular.module('RESTful')
                });
         };
 
+        service.getPolicies = function (app_name, callback) {
+            $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/policies')
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
+        service.updatePolicy = function (app_name, policy, callback) {
+            $http.put('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/policies/'+policy.id,{
+                metric_type: policy.metric_type,
+                upper_threshold: policy.upper_threshold,
+                lower_threshold: policy.lower_threshold,
+                instances_out: policy.instances_out,
+                instances_in: policy.instances_in,
+                scale_up_wait: policy.scale_up_wait,
+                scale_down_wait: policy.scale_down_wait
+            })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
+        service.disabledPolicy = function (app_name, policy_id, disabled, callback) {
+            $http.put('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/policies/'+policy_id,{
+                disabled: disabled,
+            })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
+        service.addPolicy = function (app_name, policy, callback) {
+            $http.post('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/policies/',{
+                metric_type: policy.metric_type,
+                upper_threshold: policy.upper_threshold,
+                lower_threshold: policy.lower_threshold,
+                instances_out: policy.instances_out,
+                instances_in: policy.instances_in,
+                scale_up_wait: policy.scale_up_wait,
+                scale_down_wait: policy.scale_down_wait
+            })
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
+        service.deletePolicy = function (app_name, policy_id, callback) {
+            $http.delete('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/policies/'+policy_id)
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         service.getDatabases = function (callback) {
             $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/databases')
                .success(function (response) {

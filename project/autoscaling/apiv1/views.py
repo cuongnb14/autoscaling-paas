@@ -223,7 +223,7 @@ class WebAppView(APIView):
                     app.env_db_port = new_info["env_db_port"]
                     app.env_db_name = new_info["env_db_name"]
                     app.env_db_username = new_info["env_db_username"]
-                    app.env_db_username = new_info["env_db_password"]
+                    app.env_db_password = new_info["env_db_password"]
                     app.save()
                     data = {"status": "success", "message": "Update info {} success".format(app_name)}
                 elif action == "autoscaling":
@@ -288,56 +288,68 @@ class PolicyView(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request, app_name, policy_id):
         try:
-            app = request.user.webapp_set.get(name=app_name).first()
+            app = request.user.webapp_set.get(name=app_name)
             if app is None:
-                data = {"status": "error", "message": "app {} does not exist".format(app_name)}
-                serializer = MessageSerializer(data=data)
+                msg = {"status": "error", "message": "app {} does not exist".format(app_name)}
+                return JsonResponse(msg)
             else:
                 policies = app.policy_set.all()
                 serializer = PolicySerializer(policies, many=True)
+                return Response(serializer.data)
         except Exception as e:
-            data = {"status": "error", "message": str(e)}
-            serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+            msg = {"status": "error", "message": str(e)}
+            return JsonResponse(msg)
 
     def post(self, request, app_name, policy_id):
         new_policy = request.data
+        new_policy = dict(new_policy)
+        new_policy.pop("id", None)
         try:
             policy = Policy()
             for field, value in new_policy.items():
                 setattr(policy,field,value)
-            app = request.user.webapp_set.get(name=app_name).first()
-            if app is None:
-                data = {"status": "error", "message": "app {} does not exist".format(app_name)}
-                serializer = MessageSerializer(data=data)
-            else:
-                policy.web_app = app
-                policy.save()
-                data = {"status": "success", "message": "add policy for app {} success".format(app_name)}
+            app = request.user.webapp_set.get(name=app_name)
+            policy.web_app = app
+            policy.save()
+            msg = {"status": "success", "message": "add policy for app {} success".format(app_name)}
         except Exception as e:
-            data = {"status": "error", "message": str(e)}
+            msg = {"status": "error", "message": str(e)}
+        return JsonResponse(msg)
 
-        serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+    def put(self, request, app_name, policy_id):
+        data = request.data
+        data = dict(data)
+        try:
+            app = request.user.webapp_set.get(name=app_name)
+            policy = app.policy_set.get(pk=policy_id)
+            data.pop("id", None)
+            for field, value in data.items():
+                setattr(policy,field,value)
+            policy.save()
+            # policy.metric_type = data["metric_type"]
+            # policy.upper_threshold = data["upper_threshold"]
+            # policy.lower_threshold = data["lower_threshold"]
+            # policy.instances_out = data["instances_out"]
+            # policy.instances_in = data["instances_in"]
+            # policy.scale_up_wait = data["scale_up_wait"]
+            # policy.scale_down_wait = data["scale_down_wait"]
+            msg = {"status": "success", "message": "Update policy success"}
+
+
+        except Exception as e:
+            msg = {"status": "error", "message": str(e)}
+            traceback.print_exc()
+        return JsonResponse(msg)
 
     def delete(self, request, app_name, policy_id):
-        app = request.user.webapp_set.get(name=app_name).first()
-        if app is None:
-            serializer = get_message_serializer("error", "app {} does not exist".format(app_name))
-        else:
+        try:
+            app = request.user.webapp_set.get(name=app_name)
             policy = app.policy_set.get(pk=policy_id)
-            if policy == None:
-                serializer = get_message_serializer("error", "policy id {} does not exist".format(policy_id))
-            else:
-                policy.delete()
-                serializer = get_message_serializer("success", "policy id {} deleted".format(policy_id))
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+            policy.delete()
+            msg = {"status": "success", "message": "Delete policy success"}
+        except Exception as e:
+            msg = {"status": "error", "message": str(e)}
+        return JsonResponse(msg)
 
 class DatabaseView(APIView):
     authentication_classes = (BasicAuthentication,)

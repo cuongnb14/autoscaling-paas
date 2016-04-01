@@ -52,7 +52,6 @@
                     <td><i ng-click="gas.putApp(app.name, 'deploy')" class="fa fa-cogs btn btn-primary"></i></td>
                     <td ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
                     <td ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
-
                     <td ng-show="app.instances==0"><i ng-click="gas.putApp(app.name, 'start')" class="fa fa-play btn btn-primary"></i></td>
                     <td ng-show="app.instances>0"><i ng-click="gas.putApp(app.name, 'stop')" class="fa fa-stop btn btn-primary"></i></td>
 
