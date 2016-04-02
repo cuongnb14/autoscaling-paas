@@ -9,8 +9,8 @@ echo 1 > /etc/zookeeper/conf/myid # id for master server
 echo server.1=$HOST:2888:3888 >> /etc/zookeeper/conf/zoo.cfg # zookeper mapping master server
 
 # config mesos
-echo 1 > /etc/mesos-master/quorum 
-echo $HOST > /etc/mesos-master/ip 
+echo 1 > /etc/mesos-master/quorum
+echo $HOST > /etc/mesos-master/ip
 cp /etc/mesos-master/ip /etc/mesos-master/hostname
 
 # config marathon
@@ -33,3 +33,7 @@ rm -rf /tmp/mesos/
 
 restart mesos-slave
 
+# Haproxy
+add-apt-repository ppa:vbernat/haproxy-1.6
+apt-get update
+apt-get install haproxy
