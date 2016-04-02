@@ -11,6 +11,8 @@ stop mesos-master
 echo manual > /etc/init/mesos-master.override
 stop marathon
 echo manual > /etc/init/marathon.override
+stop chronos
+echo manual > /etc/init/chronos.override
 
 # Config slave
 echo $HOST > /etc/mesos-slave/ip

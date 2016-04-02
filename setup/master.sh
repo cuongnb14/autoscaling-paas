@@ -1,6 +1,10 @@
 # Setup node master have run slave
 HOST=192.168.122.51
 
+# disable chronos
+stop chronos
+echo manual > /etc/init/chronos.override
+
 # config zookeper connection, for all hosts
 echo zk://$HOST:2181/mesos > /etc/mesos/zk
 

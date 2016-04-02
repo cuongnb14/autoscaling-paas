@@ -103,8 +103,8 @@
                     "network": "BRIDGE",
                     "portMappings": [{
                         "containerPort": 80,
-                        "hostPort": 31003,
-                        "servicePort": 31004,
+                        "hostPort": 31103,
+                        "servicePort": 31104,
                         "protocol": "tcp"
                     }]
                 }
@@ -114,7 +114,10 @@
             },
             "constraints": [
                 ["hostname", "CLUSTER", "10.10.10.51"]
-            ]
+            ],
+            "labels": {
+                "HAPROXY_GROUP": "external"
+            }
         }
       ]
     }
