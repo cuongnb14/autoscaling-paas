@@ -382,7 +382,7 @@ class DatabaseView(APIView):
             database.port = new_port
             database.user = request.user
             database.root_password = request.data["root_password"]
-            database.uuid = str(uuid4())
+            database.uuid = str(uuid.uuid4())
             database.save()
 
             marathon_client = get_marathon_client()
