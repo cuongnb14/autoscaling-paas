@@ -21,7 +21,7 @@
         }
     },
     "env": {
-        "PRE_CREATE_DB": "cadvisor"
+        "PRE_CREATE_DB": "autoscaling"
     },
     "constraints": [
         ["hostname", "CLUSTER", "10.10.10.51"],
