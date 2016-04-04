@@ -72,7 +72,7 @@ class Collector:
                 if self.data_bath:
                     data = dict()
                     data['name'] = self.INFLUXDB["SERIES"]
-                    data['columns'] = ['time', 'container_id', 'app_name', 'mesos_task_id', "cpu_usage", "mem_usage"]
+                    data['columns'] = ['time', 'container_id', 'app_uuid', 'mesos_task_id', "cpu_usage", "mem_usage"]
                     data['points'] = self.data_bath
                     self.data_bath = []
                     self.logger.info("Send data ...")
