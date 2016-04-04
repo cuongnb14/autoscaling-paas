@@ -1,10 +1,9 @@
-APP_ID = "microbot-demo"
 INFLUXDB = {
     "HOST": "10.10.10.51",
     "PORT" : "31101",
     "USERNAME" : "root",
     "PASSWORD" : "root",
-    "DBNAME" : "cadvisor",
+    "DBNAME" : "autoscaling",
 }
 
 MYSQLDB = {

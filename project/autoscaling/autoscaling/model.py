@@ -7,19 +7,22 @@ from sqlalchemy import ForeignKey
 
 Base = declarative_base()
 
-class App(Base):
+class WebApp(Base):
     """Mapping with table apps"""
-    __tablename__ = 'apps'
+    __tablename__ = 'autoscaling_web_app'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+    uuid = Column(String, unique=True)
     min_instances = Column(Integer)
     max_instances = Column(Integer)
+    cpus = Column(Float)
+    mem = Column(Float)
     policies = relationship("Policy", order_by="Policy.id", backref="app", cascade="all, delete, delete-orphan")
 
 class Policy(Base):
     """Mapping with table policies"""
-    __tablename__ = 'policies'
+    __tablename__ = 'autoscaling_policies'
 
     id = Column(Integer, primary_key=True)
     app_id = Column(String, ForeignKey('apps.id'))
@@ -30,5 +33,3 @@ class Policy(Base):
     instances_in = Column(Integer)
     scale_up_wait = Column(Integer)
     scale_down_wait = Column(Integer)
-
-
