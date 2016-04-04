@@ -59,3 +59,15 @@ def get_message_serializer(status, message):
 
 def get_db_app_marathon_name(database):
     return "{}.database.{}".format(database.user.username,database.id)
+
+def get_user_dir(user):
+    user_dir = "/autoscaling/storage/application/"+user.username
+    return user_dir
+
+def get_app_dir(app):
+    user_dir = get_user_dir(app.user)
+    app_dir = "{}/{}".format(user_dir, app.name)
+    return app_dir
+
+def database_dir(database):
+    return "/autoscaling/storage/database/database-"+database.id

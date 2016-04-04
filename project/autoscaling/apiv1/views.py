@@ -190,10 +190,10 @@ class WebAppView(APIView):
 
     def __cloning(self, app):
         try:
-            root_dir = "/autoscaling/storage/application/"+app.user.username
-            app_dir = "{}/{}".format(root_dir, app.name)
-            if not os.path.isdir(root_dir):
-                os.makedirs(root_dir)
+            user_dir = get_user_dir(app.user)
+            app_dir = get_app_dir(app)
+            if not os.path.isdir(user_dir):
+                os.makedirs(user_dir)
 
             if os.path.isdir(app_dir):
                 shutil.rmtree(app_dir)
@@ -269,6 +269,9 @@ class WebAppView(APIView):
             else:
                 try:
                     marathon_client.delete_app("{}.{}".format(app.user.username, app.name),force=True)
+                    app_dir = get_app_dir(app)
+                    if os.path.isdir(app_dir):
+                        shutil.rmtree(app_dir)
                 except:
                     pass
                 app.delete()
@@ -415,6 +418,9 @@ class DatabaseView(APIView):
             try:
                 marathon_client = get_marathon_client()
                 marathon_client.delete_app(get_db_app_marathon_name(database),force=True)
+                database_dir = get_database_dir(database)
+                if os.path.isdir(database_dir):
+                    shutil.rmtree(database_dir)
             except:
                 pass
             database.delete()
