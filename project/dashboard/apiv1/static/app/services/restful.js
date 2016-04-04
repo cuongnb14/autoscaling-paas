@@ -97,7 +97,7 @@ angular.module('RESTful')
                });
         };
 
-        service.addApp = function (app_name, github_url, min_instances, max_instances, env_db_hostname='', env_db_port=0,env_db_name='', env_db_username='', env_db_password='',  callback) {
+        service.addApp = function (app_name, github_url, min_instances, max_instances, env_db_hostname='', env_db_port=0,env_db_name='', env_db_username='', env_db_password='', cpus, mem,  callback) {
             $http.post('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps', { name : app_name,
                                                               github_url : github_url,
                                                               min_instances : min_instances,
@@ -106,7 +106,9 @@ angular.module('RESTful')
                                                               env_db_port : env_db_port,
                                                               env_db_name : env_db_name,
                                                               env_db_username : env_db_username,
-                                                              env_db_password : env_db_password
+                                                              env_db_password : env_db_password,
+                                                              cpus : cpus,
+                                                              mem : mem
                                                               })
                .success(function (response) {
                   callback(response);
@@ -118,6 +120,8 @@ angular.module('RESTful')
                                                               action : "info",
                                                               min_instances : app.min_instances,
                                                               max_instances : app.max_instances,
+                                                              cpus : app.cpus,
+                                                              mem : app.mem,
                                                               env_db_hostname : app.env_db_hostname,
                                                               env_db_port : app.env_db_port,
                                                               env_db_name : app.env_db_name,

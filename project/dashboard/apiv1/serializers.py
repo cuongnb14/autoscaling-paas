@@ -12,25 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class WebAppSerializer(serializers.ModelSerializer):
     # status = serializers.SerializerMethodField('get_status')
     # defautl it is get_cpus method
-    cpus = serializers.SerializerMethodField()
-    mem = serializers.SerializerMethodField()
     instances = serializers.SerializerMethodField()
-
-    def get_cpus(self, app):
-        try:
-            marathon_client = get_marathon_client()
-            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
-            return marathon_app.cpus
-        except Exception as e:
-            return None
-
-    def get_mem(self, app):
-        try:
-            marathon_client = get_marathon_client()
-            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
-            return marathon_app.mem
-        except Exception as e:
-            return None
 
     def get_instances(self, app):
         try:

@@ -107,8 +107,8 @@ angular.module('WebApp')
         }])
 
 .controller('SetAppController',
-    ['RESTfulService',
-    function (RESTfulService) {
+    ['$scope', 'RESTfulService',
+    function ($scope, RESTfulService) {
           $scope.addApp = function() {
               RESTfulService.addApp($scope.app_name,
                                     $scope.github_url,
@@ -119,6 +119,8 @@ angular.module('WebApp')
                                     $scope.env_db_name,
                                     $scope.env_db_username,
                                     $scope.env_db_password,
+                                    $scope.cpus,
+                                    $scope.mem,
               function(response){
                   toastr[response.status](response.message);
               });

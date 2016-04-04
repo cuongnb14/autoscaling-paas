@@ -126,6 +126,8 @@ class WebAppView(APIView):
                 app.github_url = new_app["github_url"]
                 app.min_instances = new_app["min_instances"]
                 app.max_instances = new_app["max_instances"]
+                app.cpus = new_app["cpus"]
+                app.mem = new_app["mem"]
                 app.env_hostname = get_setting("env_hostname", "10.10.10.51")
 
                 max_port = WebApp.objects.all().aggregate(Max('env_port'))["env_port__max"]
@@ -165,6 +167,8 @@ class WebAppView(APIView):
         app_template = get_setting("app_template")
         app_json = app_template % {"username": app.user.username,
                                     "app_name": app.name,
+                                    "cpus": app.cpus,
+                                    "mem": app.mem,
                                     "service_port": app.env_port,
                                     "env_port": app.env_port,
                                     "env_hostname": app.env_hostname,
@@ -219,6 +223,8 @@ class WebAppView(APIView):
                     new_info = request.data
                     app.min_instances = new_info["min_instances"]
                     app.max_instances = new_info["max_instances"]
+                    app.cpus = new_info["cpus"]
+                    app.mem = new_info["mem"]
                     app.env_db_hostname = new_info["env_db_hostname"]
                     app.env_db_port = new_info["env_db_port"]
                     app.env_db_name = new_info["env_db_name"]

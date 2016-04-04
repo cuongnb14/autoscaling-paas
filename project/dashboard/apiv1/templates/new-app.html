@@ -36,6 +36,14 @@
               <input type="text" required class="form-control" id="github_url" ng-model="github_url" placeholder="Github url of application">
             </div>
             <div class="form-group col-md-6">
+              <label for="cpus">CPUs</label>
+              <input type="number" required class="form-control" id="cpus" ng-model="cpus" placeholder="cpus">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="mem">Mem</label>
+              <input type="number" required  class="form-control" id="mem" ng-model="mem" placeholder="mem">
+            </div>
+            <div class="form-group col-md-6">
               <label for="min_instances">Min instances</label>
               <input type="number" required class="form-control" id="min_instances" ng-model="min_instances" placeholder="Min instances">
             </div>
@@ -43,6 +51,7 @@
               <label for="max_instances">Max instances</label>
               <input type="number" required  class="form-control" id="max_instances" ng-model="max_instances" placeholder="Max instances">
             </div>
+
 
             <hr />
             <div class="form-group col-md-4">

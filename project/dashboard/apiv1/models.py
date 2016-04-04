@@ -9,6 +9,8 @@ class WebApp(TimeStampedModel):
     github_url = models.CharField(max_length=255)
     min_instances = models.IntegerField()
     max_instances = models.IntegerField()
+    cpus = models.FloatField(default=0.5)
+    mem = models.FloatField(default=64)
     status = models.CharField(max_length=30, default="cloning")
     autoscaling = models.BooleanField(default="0")
     env_hostname = models.CharField(max_length=45, default='10.10.10.51')
