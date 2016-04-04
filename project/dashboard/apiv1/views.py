@@ -146,14 +146,14 @@ class WebAppView(APIView):
                 app.env_db_name = new_app["env_db_name"]
                 app.env_db_username = new_app["env_db_username"]
                 app.env_db_password = new_app["env_db_password"]
-
-
-                cloning = threading.Thread(target=self.__cloning, args=(app,), daemon=True)
-                cloning.start()
                 app.user = request.user
                 app.status = "cloning"
                 app.uuid = str(uuid.uuid4())
                 app.save()
+
+                cloning = threading.Thread(target=self.__cloning, args=(app,), daemon=True)
+                cloning.start()
+
                 data = {"status": "success", "message": "create app {} success, app is cloning".format(app_name)}
 
         except Exception as e:
