@@ -65,9 +65,8 @@ def get_user_dir(user):
     return user_dir
 
 def get_app_dir(app):
-    user_dir = get_user_dir(app.user)
-    app_dir = "{}/{}".format(user_dir, app.name)
+    app_dir = "/autoscaling/storage/application/"+app.uuid
     return app_dir
 
 def database_dir(database):
-    return "/autoscaling/storage/database/database-"+database.id
+    return "/autoscaling/storage/database/"+database.uuid

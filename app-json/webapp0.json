@@ -1,7 +1,7 @@
 {
-    "id": "%(username)s.%(app_name)s",
-    "cpus": 0.5,
-    "mem": 128,
+    "id": "app-%(uuid)s",
+    "cpus": %(cpus)f,
+    "mem": %(mem)f,
     "instances": 1,
     "container": {
         "type": "DOCKER",
@@ -16,7 +16,7 @@
             }],
             "parameters": [
                 { "key": "volume-driver", "value": "nfs" },
-                { "key": "volume", "value": "10.10.10.51/autoscaling/storage/application/%(username)s/%(app_name)s:/var/www/html" }
+                { "key": "volume", "value": "10.10.10.51/autoscaling/storage/application/%(uuid)s:/var/www/html" }
             ]
         }
     },

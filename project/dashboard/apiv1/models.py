@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class WebApp(TimeStampedModel):
     id = models.AutoField(primary_key=True)
+    uuid = models.CharField(max_length=60)
     name = models.CharField(max_length=30, unique=True)
     github_url = models.CharField(max_length=255)
     min_instances = models.IntegerField()
@@ -27,6 +28,7 @@ class WebApp(TimeStampedModel):
 
 class DatabaseApp(TimeStampedModel):
     id = models.AutoField(primary_key=True)
+    uuid = models.CharField(max_length=60)
     host = models.CharField(max_length=45)
     port = models.IntegerField(default=0)
     root_password = models.CharField(max_length=60)

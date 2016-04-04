@@ -19,6 +19,7 @@ from django.contrib.auth import authenticate
 from django.db.models import Q
 from rest_framework.authentication import BasicAuthentication
 import os
+import uuid
 import shutil
 import threading
 from django.db.models import Max
@@ -146,11 +147,13 @@ class WebAppView(APIView):
                 app.env_db_username = new_app["env_db_username"]
                 app.env_db_password = new_app["env_db_password"]
 
-                app.user = request.user
-                app.status = "cloning"
-                app.save()
+
                 cloning = threading.Thread(target=self.__cloning, args=(app,), daemon=True)
                 cloning.start()
+                app.user = request.user
+                app.status = "cloning"
+                app.uuid = str(uuid.uuid4())
+                app.save()
                 data = {"status": "success", "message": "create app {} success, app is cloning".format(app_name)}
 
         except Exception as e:
@@ -166,7 +169,7 @@ class WebAppView(APIView):
         marathon_client = get_marathon_client()
         app_template = get_setting("app_template")
         app_json = app_template % {"username": app.user.username,
-                                    "app_name": app.name,
+                                    "uuid": app.uuid,
                                     "cpus": app.cpus,
                                     "mem": app.mem,
                                     "service_port": app.env_port,
@@ -180,7 +183,7 @@ class WebAppView(APIView):
 
         try:
             try:
-                marathon_client.delete_app("{}.{}".format(app.user.username, app.name), force=True )
+                marathon_client.delete_app("app-"+app.uuid, force=True )
             except Exception as e:
                 pass
             app_marathon = get_marathon_app(app_json)
@@ -194,11 +197,7 @@ class WebAppView(APIView):
 
     def __cloning(self, app):
         try:
-            user_dir = get_user_dir(app.user)
             app_dir = get_app_dir(app)
-            if not os.path.isdir(user_dir):
-                os.makedirs(user_dir)
-
             if os.path.isdir(app_dir):
                 shutil.rmtree(app_dir)
 
@@ -206,8 +205,7 @@ class WebAppView(APIView):
             app.status = "cloned"
             self.__deploy_app(app)
         except Exception as e:
-            app.status = "clone failed:"
-
+            app.status = "clone failed"
         app.save()
 
     def put(self, request, app_name):
@@ -240,17 +238,17 @@ class WebAppView(APIView):
                     marathon_client.restart_app(app_name)
                     data = {"status": "success", "message": "restarting app {}".format(app_name)}
                 elif action == "stop":
-                    marathon_client.scale_app(app_name, 0, force=True)
+                    marathon_client.scale_app("app-"+app.uuid, 0, force=True)
                     data = {"status": "success", "message": "stoping app {}".format(app_name)}
                 elif action == "start":
-                    marathon_client.scale_app(app_name, app.min_instances)
+                    marathon_client.scale_app("app-"+app.uuid, app.min_instances)
                     data = {"status": "success", "message": "starting app {}".format(app_name)}
                 elif action == "scale":
                     instances = request.data["value"]
                     if instances > app.max_instances or instances < app.min_instances:
                         data = {"status": "error", "message": "number instances must in [{},{}]".format(app.min_instances, app.max_instances)}
                     else:
-                        marathon_client.scale_app("{}.{}".format(app.user.username, app.name), instances)
+                        marathon_client.scale_app("app-"+app.uuid, instances)
                         data = {"status": "success", "message": "scaling app {} to {}".format(app_name, instances)}
                 elif action == "deploy":
                     try:
@@ -384,12 +382,13 @@ class DatabaseView(APIView):
             database.port = new_port
             database.user = request.user
             database.root_password = request.data["root_password"]
+            database.uuid = str(uuid4())
             database.save()
 
             marathon_client = get_marathon_client()
             database_template = get_setting("database_template","")
-            database_json = database_template % {"username":request.user.username,
-                                                "database_id": database.id,
+            database_json = database_template % {
+                                                "uuid": database.uuid,
                                                 "service_port": database.port,
                                                 "root_password": database.root_password
                                                 }
@@ -423,7 +422,7 @@ class DatabaseView(APIView):
             database = request.user.databaseapp_set.get(id=database_id)
             try:
                 marathon_client = get_marathon_client()
-                marathon_client.delete_app(get_db_app_marathon_name(database),force=True)
+                marathon_client.delete_app("database-"+database.uuid,force=True)
                 database_dir = get_database_dir(database)
                 if os.path.isdir(database_dir):
                     shutil.rmtree(database_dir)
