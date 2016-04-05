@@ -23,6 +23,7 @@ import uuid
 import shutil
 import threading
 from django.db.models import Max
+from influxdb.influxdb08 import InfluxDBClient
 
 # from rest_framework.decorators import parser_classes
 # from rest_framework.parsers import FormParser
@@ -435,3 +436,35 @@ class DatabaseView(APIView):
             msg = {"status": "error", "message": "Unknown error"}
             traceback.print_exc()
         return JsonResponse(msg)
+
+class MetricView(APIView):
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, app_name):
+        #app = request.user.webapp_set.get(name=app_name)
+        try:
+            INFLUXDB = {
+                "HOST": "10.10.10.51",
+                "PORT" : "31101",
+                "USERNAME" : "root",
+                "PASSWORD" : "root",
+                "DBNAME" : "autoscaling",
+            }
+            influxdb_client = InfluxDBClient(INFLUXDB["HOST"], INFLUXDB["PORT"], INFLUXDB["USERNAME"], INFLUXDB["PASSWORD"], INFLUXDB["DBNAME"])
+            app_uuid = "influxdb-db"
+
+            query = "SELECT COUNT(DISTINCT(mesos_task_id)) as instances, MEAN(cpu_usage) as mean_cpu, MEAN(mem_usage) as mean_mem  "
+            query += "FROM monitoring "
+            query += "WHERE app_name = '{}' and time > now()-10m ".format(app_uuid)
+            query += "GROUP BY time(10s)"
+
+            metrics = influxdb_client.query(query)
+            if metrics:
+                #return JsonResponse()
+                return JsonResponse({"data" : metrics[0]["points"]})
+            else:
+                return JsonResponse({})
+        except Exception as e:
+            return JsonResponse({})
+            traceback.print_exc()

@@ -125,4 +125,62 @@ angular.module('WebApp')
                   toastr[response.status](response.message);
               });
           };
+    }])
+
+.controller('MetricController',
+    ['$scope', 'RESTfulService',
+    function ($scope, RESTfulService) {
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      setInterval(drawChart, 10000);
+      function drawChart() {
+          RESTfulService.getMetrics("app_name", drawFromData);
+          function drawFromData(response) {
+              /*       cpu_usage       */
+              var data = new google.visualization.DataTable();
+              data.addColumn('datetime', 'Time');
+              data.addColumn('number', 'Cpus');
+              function getCpuData(x) {
+                  return [new Date(x[0]*1000), x[2]]
+              }
+              var row = response.data.map(getCpuData)
+              data.addRows(row)
+              var options = {
+                    legend: 'none',
+                    height: 200,
+                    hAxis: {
+                      format: 'MMM dd hh:mm',
+                      gridlines: {count: 10, color: '#dfdfdf'}
+                    },
+                    vAxis: {
+                      gridlines: {color: '#dfdfdf'},
+                      minValue: 0
+                    }
+                };
+              var chart = new google.visualization.LineChart(document.getElementById('cpu_chart'));
+              chart.draw(data, options);
+              /*       mem_usage       */
+              var data = new google.visualization.DataTable();
+              data.addColumn('datetime', 'Time');
+              data.addColumn('number', 'Mem');
+              function getMemData(x) {
+                  return [new Date(x[0]*1000), x[3]]
+              }
+              var row = response.data.map(getMemData)
+              data.addRows(row)
+              var chart = new google.visualization.LineChart(document.getElementById('mem_chart'));
+              chart.draw(data, options);
+              /*       instances       */
+              var data = new google.visualization.DataTable();
+              data.addColumn('datetime', 'Time');
+              data.addColumn('number', 'Instances');
+              function getInstancesData(x) {
+                  return [new Date(x[0]*1000), x[1]]
+              }
+              var row = response.data.map(getInstancesData)
+              data.addRows(row)
+              var chart = new google.visualization.LineChart(document.getElementById('instances_chart'));
+              chart.draw(data, options);
+          }
+      }
     }]);

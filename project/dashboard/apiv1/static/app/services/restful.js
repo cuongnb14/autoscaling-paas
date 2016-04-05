@@ -7,6 +7,13 @@ angular.module('RESTful')
     function ($http, appConfig) {
         var service = {};
 
+        service.getMetrics = function (app_name, callback) {
+            $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/metrics')
+               .success(function (response) {
+                  callback(response);
+               });
+        };
+
         service.getApps = function (callback) {
             $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps')
                .success(function (response) {
