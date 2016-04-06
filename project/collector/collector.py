@@ -9,6 +9,7 @@ import concurrent.futures
 from datetime import datetime
 import logging
 from influxdb.influxdb08 import InfluxDBClient
+import signal
 
 
 class Collector:
@@ -103,7 +104,15 @@ class Collector:
                     except Exception as e:
                         self.logger.debug("Exception when Cancel collector: {} : {}".format(str(e), event["id"]))
 
+def handler(signum=None, frame=None):
+    logger.info('Signal handler called with signal {}'.format(signum))
+    logger.info('Stop docker_mapping_service')
+    sys.exit()
+
 def main():
+    for sign in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
+        signal.signal(sign, handler)
+
     logging.getLogger("Collector").setLevel("DEBUG")
     logging.basicConfig(stream=sys.stdout, level="DEBUG")
     logging.getLogger("requests.packages.urllib3.connectionpool").setLevel("ERROR")
