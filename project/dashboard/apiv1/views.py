@@ -273,12 +273,15 @@ class WebAppView(APIView):
                 data = {"status": "error", "message": "app {} does not exist".format(app_name)}
             else:
                 try:
-                    marathon_client.delete_app("{}.{}".format(app.user.username, app.name),force=True)
+                    marathon_client.delete_app("app-".app.uuid,force=True)
+                except Exception as e:
+                    pass
+                try:
                     app_dir = get_app_dir(app)
                     if os.path.isdir(app_dir):
                         shutil.rmtree(app_dir)
-                except:
-                    pass
+                except Exception as e:
+                    raise 
                 app.delete()
                 data = {"status": "success", "message": "delete app {} success".format(app_name)}
         except WebApp.DoesNotExist as e:
