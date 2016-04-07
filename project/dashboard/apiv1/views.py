@@ -169,7 +169,7 @@ class WebAppView(APIView):
     def __deploy_app(self, app):
         marathon_client = get_marathon_client()
         app_template = get_setting("app_template")
-        app_json = app_template % {"username": app.user.username,
+        app_json = app_template % {
                                     "uuid": app.uuid,
                                     "cpus": app.cpus,
                                     "mem": app.mem,
@@ -281,7 +281,7 @@ class WebAppView(APIView):
                     if os.path.isdir(app_dir):
                         shutil.rmtree(app_dir)
                 except Exception as e:
-                    raise 
+                    raise
                 app.delete()
                 data = {"status": "success", "message": "delete app {} success".format(app_name)}
         except WebApp.DoesNotExist as e:
@@ -427,10 +427,13 @@ class DatabaseView(APIView):
             try:
                 marathon_client = get_marathon_client()
                 marathon_client.delete_app("database-"+database.uuid,force=True)
+            except Exception as e:
+                pass
+            try:
                 database_dir = get_database_dir(database)
                 if os.path.isdir(database_dir):
                     shutil.rmtree(database_dir)
-            except:
+            except Exception as e:
                 pass
             database.delete()
 
