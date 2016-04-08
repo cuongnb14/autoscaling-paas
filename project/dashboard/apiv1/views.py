@@ -25,6 +25,8 @@ import threading
 from django.db.models import Max
 from influxdb.influxdb08 import InfluxDBClient
 import time
+from django.conf import settings
+from datetime import datetime
 
 # from rest_framework.decorators import parser_classes
 # from rest_framework.parsers import FormParser
@@ -450,29 +452,25 @@ class MetricView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, app_name):
-        #app = request.user.webapp_set.get(name=app_name)
         try:
-            INFLUXDB = {
-                "HOST": "10.10.10.51",
-                "PORT" : "31101",
-                "USERNAME" : "root",
-                "PASSWORD" : "root",
-                "DBNAME" : "autoscaling",
-            }
-            influxdb_client = InfluxDBClient(INFLUXDB["HOST"], INFLUXDB["PORT"], INFLUXDB["USERNAME"], INFLUXDB["PASSWORD"], INFLUXDB["DBNAME"])
-            app_uuid = "influxdb-db"
+            app = request.user.webapp_set.get(name=app_name)
+            now = int(datetime.now().timestamp()) # second
+            end = int(request.GET.get("end", now))
+            start = request.GET.get("start", end - 86400) # 1 day
+
+            influxdb_client = InfluxDBClient(settings.INFLUXDB["HOST"], settings.INFLUXDB["PORT"], settings.INFLUXDB["USERNAME"], settings.INFLUXDB["PASSWORD"], settings.INFLUXDB["DBNAME"])
+            mesos_app_id = "app-"+app.uuid
 
             query = "SELECT COUNT(DISTINCT(mesos_task_id)) as instances, MEAN(cpu_usage) as mean_cpu, MEAN(mem_usage) as mean_mem  "
             query += "FROM monitoring "
-            query += "WHERE app_name = '{}' and time > now()-10m ".format(app_uuid)
+            query += "WHERE app_uuid = '{}' and time > {}s and time < {}s ".format(mesos_app_id, start, end)
             query += "GROUP BY time(10s)"
-
             metrics = influxdb_client.query(query)
             if metrics:
-                #return JsonResponse()
                 return JsonResponse({"data" : metrics[0]["points"]})
+                return JsonResponse({"data" : "sd"})
             else:
-                return JsonResponse({})
+                return JsonResponse({"data" : query})
         except Exception as e:
-            return JsonResponse({})
             traceback.print_exc()
+            return JsonResponse({"data" : "11"})

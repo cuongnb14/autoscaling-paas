@@ -35,7 +35,7 @@
                   <th class="text-center">Start/Stop</th>
                   <th class="col-sm-1 text-center">Scale</th>
                   <th class="col-sm-1 text-center">Edit</th>
-                  <th class="col-sm-1">Info</th>
+                  <th class="col-sm-1">Info/Chart</th>
                   <th>Delete</th>
                 </tr>
                 </thead>
@@ -74,6 +74,7 @@
                         <button ng-click="mc.showModal('mdi-'+app.name)" class="btn btn-info btn-sm">
                           <i class="fa fa-info"></i>
                         </button>
+                        <a href="{% endverbatim %}{% url "static_view" "chart"%}{% verbatim %}#?name={{app.name}}" class="btn btn-info btn-sm"><i class="fa fa-line-chart"></i></a>
 
                         <modal id="mdi-{{app.name}}" title="App infomations">
                           <div>

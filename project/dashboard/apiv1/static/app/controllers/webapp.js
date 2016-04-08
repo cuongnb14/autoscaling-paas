@@ -128,14 +128,32 @@ angular.module('WebApp')
     }])
 
 .controller('MetricController',
-    ['$scope', 'RESTfulService',
-    function ($scope, RESTfulService) {
+    ['$scope', 'RESTfulService', '$location',
+    function ($scope, RESTfulService, $location) {
+      var app_name = $location.search().name;
+      var reservationtime = $('#reservationtime');
+
+      reservationtime.daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+
+      reservationtime.change(function(){
+          drawChart();
+      });
+
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
-      setInterval(drawChart, 10000);
+      //setInterval(drawChart, 10000);
       function drawChart() {
-          RESTfulService.getMetrics("app_name", drawFromData);
+          var times = reservationtime.val().split("-");
+          var timerange = ""
+          if(times.length == 2){
+              var start = Date.parse(times[0])/1000;
+              var end = Date.parse(times[1])/1000;
+              timerange = "?start="+start+"&end="+end;
+          }
+
+          RESTfulService.getMetrics(app_name, timerange, drawFromData);
           function drawFromData(response) {
+
               /*       cpu_usage       */
               var data = new google.visualization.DataTable();
               data.addColumn('datetime', 'Time');

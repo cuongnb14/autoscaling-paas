@@ -6,9 +6,8 @@ angular.module('RESTful')
     ['$http', 'appConfig',
     function ($http, appConfig) {
         var service = {};
-
-        service.getMetrics = function (app_name, callback) {
-            $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/metrics')
+        service.getMetrics = function (app_name, timerange, callback) {
+            $http.get('http://'+appConfig.host+':'+appConfig.port+'/api/v1/apps/'+app_name+'/metrics'+timerange)
                .success(function (response) {
                   callback(response);
                });

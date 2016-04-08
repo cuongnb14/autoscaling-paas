@@ -1,4 +1,4 @@
-from .common import * 
+from .common import *
 
 DATABASES = {
     'default': {
@@ -6,7 +6,15 @@ DATABASES = {
         'NAME': 'autoscaling',
         'USER': 'root',
         'PASSWORD': 'galaxy',
-        'HOST': '127.0.0.1',
-        'PORT': '43306',
+        'HOST': '10.10.10.51',
+        'PORT': '31102',
     }
+}
+
+INFLUXDB = {
+    "HOST": "10.10.10.51",
+    "PORT" : "31101",
+    "USERNAME" : "root",
+    "PASSWORD" : "root",
+    "DBNAME" : "autoscaling",
 }
