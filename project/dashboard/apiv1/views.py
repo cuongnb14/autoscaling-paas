@@ -456,7 +456,7 @@ class MetricView(APIView):
             app = request.user.webapp_set.get(name=app_name)
             now = int(datetime.now().timestamp()) # second
             end = int(request.GET.get("end", now))
-            start = request.GET.get("start", end - 86400) # 1 day
+            start = request.GET.get("start", end - 3600) # 1 day
 
             influxdb_client = InfluxDBClient(settings.INFLUXDB["HOST"], settings.INFLUXDB["PORT"], settings.INFLUXDB["USERNAME"], settings.INFLUXDB["PASSWORD"], settings.INFLUXDB["DBNAME"])
             mesos_app_id = "app-"+app.uuid
