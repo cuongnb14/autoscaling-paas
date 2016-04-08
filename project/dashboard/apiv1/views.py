@@ -24,6 +24,7 @@ import shutil
 import threading
 from django.db.models import Max
 from influxdb.influxdb08 import InfluxDBClient
+import time
 
 # from rest_framework.decorators import parser_classes
 # from rest_framework.parsers import FormParser
@@ -185,6 +186,7 @@ class WebAppView(APIView):
         try:
             try:
                 marathon_client.delete_app("app-"+app.uuid, force=True )
+                time.sleep(5)
             except Exception as e:
                 pass
             app_marathon = get_marathon_app(app_json)
