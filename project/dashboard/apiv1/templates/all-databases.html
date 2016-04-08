@@ -21,9 +21,7 @@
             <div class="box-header">
               <h3 class="box-title" >All Database</h3>
               <div class="pull-right" ng-controller="ModalController as mc">
-
                   <button ng-click="mc.showModal('myModal')" class="btn btn-primary">New Database</button>
-
                   <modal id="myModal" title="Database infomation">
                     <form role="form">
                       <div class="form-group">
@@ -34,8 +32,7 @@
                     </form>
                   </modal>
 
-
-                <a type="button" href="http://10.10.10.51:31004/" target="_blank" class="btn btn-warning">PHPMyadmin</a>
+                <a type="button" href="http://10.10.10.51:9000/" target="_blank" class="btn btn-warning">PHPMyadmin</a>
               </div>
             </div>
             <!-- /.box-header -->
@@ -44,7 +41,6 @@
                 <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Status</th>
                   <th class="col-sm-4">Host</th>
                   <th>Port</th>
                   <th class="col-sm-3">Root password</th>
@@ -56,7 +52,6 @@
                   {% verbatim %}
                 <tr ng-repeat="database in gds.databases">
                   <td>{{database.id}}</td>
-                  <td>{{database.status}}</td>
                   <td>{{database.host}}</td>
                   <td>{{database.port}}</td>
                   <td><div class="input-group" ng-init="database.pass='******'">

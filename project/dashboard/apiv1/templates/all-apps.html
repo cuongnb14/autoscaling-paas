@@ -29,12 +29,12 @@
                   <th>Name</th>
                   <th>Github url</th>
                   <th>Status</th>
-                  <th title="instances">Ins</th>
-                  <th title="deploy/redeploy">Deploy</th>
-                  <th>Autoscaling</th>
-                  <th>Start/Stop</th>
-                  <th class="col-sm-1">Scale</th>
-                  <th class="col-sm-1">Edit</th>
+                  <th title="instances" class="text-center">Ins</th>
+                  <th title="deploy/redeploy" class="text-center">Redeploy</th>
+                  <th class="text-center">Autoscaling</th>
+                  <th class="text-center">Start/Stop</th>
+                  <th class="col-sm-1 text-center">Scale</th>
+                  <th class="col-sm-1 text-center">Edit</th>
                   <th class="col-sm-1">Info</th>
                   <th>Delete</th>
                 </tr>
@@ -44,15 +44,15 @@
                   <tr ng-repeat="app in gas.apps">
                     <td>{{app.name}}</td>
                     <td>{{app.github_url}}</td>
-                    <td>{{app.status}}</td>
-                    <td>{{app.instances}}</td>
-                    <td><i ng-click="gas.putApp(app.name, 'deploy')" class="fa fa-cogs btn btn-primary"></i></td>
-                    <td ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
-                    <td ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
-                    <td ng-show="app.instances==0"><i ng-click="gas.putApp(app.name, 'start')" class="fa fa-play btn btn-primary"></i></td>
-                    <td ng-show="app.instances>0"><i ng-click="gas.putApp(app.name, 'stop')" class="fa fa-stop btn btn-primary"></i></td>
+                    <td class="text-center"><span class="badge label-success">{{app.status}}</span></td>
+                    <td class="text-center"><span class="badge label-success">{{app.instances}}</span></td>
+                    <td class="text-center"><i ng-click="gas.putApp(app.name, 'deploy')" class="fa fa-cogs btn btn-primary"></i></td>
+                    <td class="text-center" ng-show="app.autoscaling==1"><i class="fa fa-check btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
+                    <td class="text-center" ng-show="app.autoscaling==0"><i class="fa fa-ban btn btn-primary" ng-click="gas.putApp(app.name, 'autoscaling')"></i></td>
+                    <td class="text-center" ng-show="app.instances==0"><i ng-click="gas.putApp(app.name, 'start')" class="fa fa-play btn btn-primary"></i></td>
+                    <td class="text-center" ng-show="app.instances>0"><i ng-click="gas.putApp(app.name, 'stop')" class="fa fa-stop btn btn-primary"></i></td>
 
-                    <td class="container" ng-controller="ModalController as mc">
+                    <td  class="container" ng-controller="ModalController as mc">
                         <button ng-disabled="app.autoscaling" ng-click="mc.showModal('mds-'+app.name)" class="btn btn-primary btn-sm">
                           <i class="fa fa-arrows-h"></i>
                         </button>
@@ -68,9 +68,9 @@
                         </modal>
                     </td>
                     {% endverbatim %}
-                    <td><a href="{% url "static_view" "edit-app"%}{% verbatim %}#?name={{app.name}}" ><i class="fa fa-pencil btn btn-primary"></i></a></td>
+                    <td class="text-center"><a href="{% url "static_view" "edit-app"%}{% verbatim %}#?name={{app.name}}" ><i class="fa fa-pencil btn btn-primary"></i></a></td>
 
-                    <td ng-controller="ModalController as mc">
+                    <td  ng-controller="ModalController as mc">
                         <button ng-click="mc.showModal('mdi-'+app.name)" class="btn btn-info btn-sm">
                           <i class="fa fa-info"></i>
                         </button>

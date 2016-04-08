@@ -17,7 +17,7 @@ class WebAppSerializer(serializers.ModelSerializer):
     def get_instances(self, app):
         try:
             marathon_client = get_marathon_client()
-            marathon_app = marathon_client.get_app("{}.{}".format(app.user.username,app.name))
+            marathon_app = marathon_client.get_app("app-"+app.uuid)
             return marathon_app.instances
         except Exception as e:
             return 0

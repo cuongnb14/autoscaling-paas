@@ -124,7 +124,7 @@
                 <th>Instances in</th>
                 <th>Scale up wait</th>
                 <th>Scale down wait</th>
-                <th>Disabled</th>
+                <th>Active</th>
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>
@@ -140,8 +140,8 @@
                   <td>{{policy.instances_in}}</td>
                   <td>{{policy.scale_up_wait}}</td>
                   <td>{{policy.scale_down_wait}}</td>
-                  <td ng-show="policy.disabled==1"><i class="fa fa-check btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 0)"></i></td>
-                  <td ng-show="policy.disabled==0"><i class="fa fa-ban btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 1)"></i></td>
+                  <td ng-show="policy.disabled==0"><i class="fa fa-check btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 1)"></i></td>
+                  <td ng-show="policy.disabled==1"><i class="fa fa-ban btn btn-primary" ng-click="ga.disabledPolicy(policy.id, 0)"></i></td>
                   <td><button class="btn btn-info btn-sm" ng-click="mc.showModal('md-'+policy.id)"><i class="fa fa-pencil "></i></button>
                       <modal id="md-{{policy.id}}" title="Edit policy">
                         <form role="form">
