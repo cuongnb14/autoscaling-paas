@@ -33,6 +33,37 @@
               ["hostname", "CLUSTER", "10.10.10.51"],
               ["hostname", "UNIQUE"]
           ]
+        },
+        {
+            "id": "collector",
+            "cpus": 0.2,
+            "mem": 64,
+            "instances": 3,
+            "container": {
+                "type": "DOCKER",
+                "docker": {
+                    "image": "cuongnb14/collector",
+                    "network": "BRIDGE"
+                },
+                "volumes": [{
+                    "containerPath": "/var/run/",
+                    "hostPath": "/var/run/",
+                    "mode": "RW"
+                }]
+            },
+            "env": {
+                "INFLUXDB_HOST": "10.10.10.51",
+                "INFLUXDB_PORT": "31101",
+                "INFLUXDB_USERNAME": "root",
+                "INFLUXDB_PASSWORD": "root",
+                "INFLUXDB_DBNAME": "autoscaling",
+                "INFLUXDB_SERIES": "monitoring",
+                "COLLECT_TIME_INTERVAL": "3",
+                "BATH_TIME_INTERVAL": "10"
+            },
+            "constraints": [
+                ["hostname", "UNIQUE"]
+            ]
         }
       ]
     },{
@@ -40,8 +71,8 @@
       "apps": [
         {
           "id": "marathon-lb",
-          "cpus": 0.5,
-          "mem": 128,
+          "cpus": 0.2,
+          "mem": 64,
           "cmd": "sudo /autoscaling/marathon-lb/marathon_lb.py --marathon http://10.10.10.51:8080 --haproxy-config /etc/haproxy/haproxy.cfg --group external --sse",
           "instances": 1,
           "constraints": [
@@ -51,12 +82,12 @@
         }
       ]
     },{
-      "id": "utility",
+      "id": "database",
       "apps": [
         {
             "id": "phpmyadmin",
-            "cpus": 0.5,
-            "mem": 128,
+            "cpus": 0.2,
+            "mem": 64,
             "instances": 1,
             "container": {
                 "type": "DOCKER",
