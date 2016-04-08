@@ -1,0 +1,31 @@
+{
+    "id": "collector",
+    "cpus": 0.5,
+    "mem": 128,
+    "instances": 3,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "cuongnb14/collector",
+            "network": "BRIDGE"
+        },
+        "volumes": [{
+            "containerPath": "/var/run/",
+            "hostPath": "/var/run/",
+            "mode": "RW"
+        }]
+    },
+    "env": {
+        "INFLUXDB_HOST": "10.10.10.51",
+        "INFLUXDB_PORT": "31101",
+        "INFLUXDB_USERNAME": "root",
+        "INFLUXDB_PASSWORD": "root",
+        "INFLUXDB_DBNAME": "autoscaling",
+        "INFLUXDB_SERIES": "monitoring",
+        "COLLECT_TIME_INTERVAL": "3",
+        "BATH_TIME_INTERVAL": "10"
+    },
+    "constraints": [
+        ["hostname", "UNIQUE"]
+    ]
+}
