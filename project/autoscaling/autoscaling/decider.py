@@ -1,5 +1,7 @@
 from .autoscaling import *
 from .model import *
+from .scaler import Scaler
+from .monitor import Monitor
 import logging
 import time
 
@@ -36,11 +38,9 @@ class BaseRuleDecider(Decider):
         return (delta, time_wait)
 
     def deciding(self):
-        metrics = self.monitor.get_metrics()
-        avg_cpu_usage = self.monitor.avg_cpu_usage()
-        avg_memory_usage = self.monitor.avg_memory_usage()
-        metrics = {"cpu": metrics[2], "mem": metrics[3]}
         self.logger.info("start deciding...")
+        metrics = self.monitor.get_metrics()
+        metrics = {"cpu": metrics[2], "mem": metrics[3]}
         self.logger.info("metrics: {}".format(metrics))
 
         instances_delta = {"up": 0, "down": 100}
@@ -57,9 +57,9 @@ class BaseRuleDecider(Decider):
 
         if(instances_delta['up'] > 0):
             self.scaler.scale(instances_delta['up'])
-            self.logger.info("Sleep: {}s".format(time_wait["up"]))
+            self.logger.info("Sleep affter scale: {}s".format(time_wait["up"]))
             time.sleep(time_wait["up"])
         elif(instances_delta['down'] > 0):
             self.scaler.scale(0-instances_delta['down'])
-            self.logger.info("Sleep: {}s".format(time_wait["down"]))
+            self.logger.info("Sleep affter scale: {}s".format(time_wait["down"]))
             time.sleep(time_wait["down"])

@@ -9,8 +9,8 @@ class Monitor(object):
 
         @param model.WebApp app
         """
-       self.influxdb_client = influxdb_client
-       self.app = app
+        self.influxdb_client = influxdb_client
+        self.app = app
 
     def get_metrics(self):
         query = "SELECT COUNT(DISTINCT(mesos_task_id)), MEAN(cpu_usage), MEAN(mem_usage)  FROM monitoring where app_uuid = 'app-{}' and time > now()-1m group by time(10s)".format(self.app.uuid)

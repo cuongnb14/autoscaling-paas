@@ -1,5 +1,7 @@
 __author__ = 'cuongnb14@gmail.com'
 
+import logging
+
 class Scaler(object):
     """docstring for ClassName"""
     def __init__(self, marathon_client, app):

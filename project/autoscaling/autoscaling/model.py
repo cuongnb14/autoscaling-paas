@@ -25,7 +25,7 @@ class Policy(Base):
     __tablename__ = 'autoscaling_policies'
 
     id = Column(Integer, primary_key=True)
-    app_id = Column(String, ForeignKey('apps.id'))
+    web_app_id = Column(String, ForeignKey('autoscaling_web_app.id'))
     metric_type = Column(String)
     upper_threshold = Column(Float)
     lower_threshold = Column(Float)
