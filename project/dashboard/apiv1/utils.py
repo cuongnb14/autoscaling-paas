@@ -40,5 +40,5 @@ def get_app_dir(app):
     app_dir = "/autoscaling/storage/application/"+app.uuid
     return app_dir
 
-def database_dir(database):
+def get_database_dir(database):
     return "/autoscaling/storage/database/"+database.uuid

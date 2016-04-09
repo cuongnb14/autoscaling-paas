@@ -237,7 +237,30 @@ class WebAppView(APIView):
                     data = {"status": "success", "message": "Update info {} success".format(app_name)}
                 elif action == "autoscaling":
                     app.autoscaling = not app.autoscaling
-                    data = {"status": "success", "message": "autoscaling toggle success"}
+                    if app.autoscaling:
+                        try:
+                            marathon_client.delete_app("autoscaling-"+app.uuid, force=True)
+                            time.sleep(5)
+                        except Exception as e:
+                            pass
+                        autoscaling_template = get_setting("autoscaling_template","")
+                        autoscaling_json = autoscaling_template % {
+                                                            "uuid": app.uuid
+                                                            }
+                        try:
+                            app_marathon = get_marathon_app(autoscaling_json)
+                            marathon_client.create_app(app_marathon.id, app_marathon)
+                            data = {"status": "success", "message": "autoscaling is on"}
+                        except Exception as e:
+                            traceback.print_exc()
+                            app.autoscaling = 0
+                            data = {"status": "error", "message": "Error when create app autoscaling"}
+                    else:
+                        data = {"status": "success", "message": "autoscaling is off"}
+                        try:
+                            marathon_client.delete_app("autoscaling-"+app.uuid, force=True)
+                        except Exception as e:
+                            pass
                     app.save()
                 elif action == "restart":
                     marathon_client.restart_app(app_name)
@@ -263,11 +286,9 @@ class WebAppView(APIView):
                 else:
                     data = {"status": "error", "message": "Action not found"}
         except Exception as e:
-            data = {"status": "error", "message": str(e)}
-        serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return JsonResponse({"status": "error", "message": "Unserialize object!"})
+            traceback.print_exc()
+            data = {"status": "error", "message": "Unknow error"}
+        return JsonResponse(data)
 
     def delete(self, request, app_name):
         try:
@@ -407,7 +428,7 @@ class DatabaseView(APIView):
                 msg = {"status": "success", "message": "created and deploying database"}
             except Exception as e:
                 traceback.print_exc()
-                msg = {"status": "error", "message": "Unknown error when deploying database app"+str(database_json)}
+                msg = {"status": "error", "message": "Unknown error when deploying database app"}
 
         except Exception as e:
             msg = {"status": "error", "message": "Unknown error"}

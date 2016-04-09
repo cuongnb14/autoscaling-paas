@@ -1,0 +1,11 @@
+{
+    "id": "autoscaling-%(uuid)s",
+    "cpus": 0.2,
+    "mem": 64,
+    "cmd": "sudo python3 /autoscaling/autoscaling-paas/project/autoscaling/main.py %(uuid)s",
+    "instances": 1,
+    "constraints": [
+        ["hostname", "CLUSTER", "10.10.10.51"],
+        ["hostname", "UNIQUE"]
+    ]
+}

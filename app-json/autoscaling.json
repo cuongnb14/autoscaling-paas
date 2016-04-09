@@ -115,7 +115,7 @@
         {
             "id": "autoscaling-db",
             "cpus": 0.5,
-            "mem": 128,
+            "mem": 248,
             "instances": 1,
             "container": {
                 "type": "DOCKER",
