@@ -51,9 +51,11 @@ class BaseRuleDecider(Decider):
             if(instances_delta['up'] < delta['up']):
                 instances_delta['up'] = delta['up']
                 time_wait["up"] = time_wait_temp["up"]
-            if(instances_delta['down'] > delta['down']):
+            if(instances_delta['down'] > delta['down'] && delta['down'] != 0):
                 instances_delta['down'] = delta['down']
                 time_wait["down"] = time_wait_temp["down"]
+        if instances_delta['down'] == 100:
+            instances_delta['down'] = 0
 
         if(instances_delta['up'] > 0):
             self.scaler.scale(instances_delta['up'])
