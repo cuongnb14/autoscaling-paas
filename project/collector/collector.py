@@ -42,7 +42,7 @@ class Collector:
         mesos_task_id = ""
         app_name = ""
         container_envs = self.docker_client.inspect_container(container_id)['Config']['Env']
-        container_cpushares = self.docker_client.inspect_container(container_id)['HostConfig']['CpuShares']
+        container_cpushares = self.docker_client.inspect_container(container_id)['HostConfig']['CpuShares'] / 1024
         for env in container_envs:
             if env.startswith('MESOS_TASK_ID'):
                 mesos_task_id = env.split('=')[1]
@@ -53,7 +53,7 @@ class Collector:
             try:
                 stat = self.docker_client.stats(container_id, decode="utf8", stream=False)
                 cpu_usage = (stat["cpu_stats"]["cpu_usage"]["total_usage"] - stat["precpu_stats"]["cpu_usage"]["total_usage"])
-                cpu_usage = cpu_usage * len(stat["cpu_stats"]["cpu_usage"]["percpu_usage"]) * 1024 /  container_cpushares * 100 / math.pow(10,9)
+                cpu_usage = cpu_usage / container_cpushares * 100 / math.pow(10,9)
                 mem_usage = stat["memory_stats"]["usage"] / stat["memory_stats"]["limit"] * 100
                 current_time = datetime.now().timestamp()
                 data = [current_time, container_id, app_name, mesos_task_id, cpu_usage, mem_usage]
