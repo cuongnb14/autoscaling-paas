@@ -66,20 +66,20 @@ class ASClient:
             except CommandNotFound as e:
                 print("Error: " + str(e))
             except Exception as e:
-                print("Error: command not found")
+                print("Error: Unknow error!")
 
 
     def app(self, command):
-        if command[1] == "-a":
+        if command[1] == "--all":
             response = self._request("get","apps")
             print(response.text)
 
-        elif command[1] == '-i':
+        elif command[1] == '--name':
             response = self._request("get","apps/"+command[2])
             print(response.text)
 
         elif command[1] == "create":
-            if command[2] == '-f':
+            if command[2] == '--file':
                 content = self._get_content_file(command[3])
                 response = self._request("post", "apps", content)
                 print(response.text)
@@ -87,17 +87,24 @@ class ASClient:
                 pass
 
         elif command[1] == 'delete':
-            response = self._request("delete","apps/"+command[2])
-            print(response.text)
+            if command[2] == '--name':
+                response = self._request("delete","apps/"+command[3])
+                print(response.text)
 
         elif command[1] == 'policy':
-            if command[2] == '-i':
+            if command[2] == '--list':
                 response = self._request("get","apps/{}/policies".format(command[3]))
                 print(response.text)
-            elif command[2] == 'delete':
+            elif command[2] == '--delete':
                 response = self._request("delete","apps/{}/policies/{}".format(command[3],comand[4]))
                 print(response.text)
-            elif command[3] == 'add':
+            elif command[2] == '--add':
+                if command[4] == '--file':
+                    content = self._get_content_file(command[5])
+                    response = self._request("post", "apps/{}/policies".format(command[3]), content)
+                    print(response.text)
+                else:
+                    pass
 
 
     def _get_content_file(self, file_name):
