@@ -298,7 +298,8 @@ class WebAppView(APIView):
                 data = {"status": "error", "message": "app {} does not exist".format(app_name)}
             else:
                 try:
-                    marathon_client.delete_app("app-".app.uuid,force=True)
+                    marathon_client.delete_app("app-"+app.uuid,force=True)
+                    marathon_client.delete_app("autoscaling-"+app.uuid, force=True)
                 except Exception as e:
                     pass
                 try:
